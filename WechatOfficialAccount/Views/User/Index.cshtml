@@ -1,0 +1,47 @@
+﻿@using WechatOfficialAccount.Models.DTO
+@using WechatOfficialAccount.Helper
+@{
+    ViewData["Title"] = "账户信息设置";
+}
+
+<div class="container">
+
+    <div class="row">
+        @{
+            List<GetUserInfoDto> getUserInfoDtoList = ViewData["GetUserInfoDtoList"] as List<GetUserInfoDto>;
+            foreach (var item in getUserInfoDtoList)
+            {
+                <div class="col-sm-3 mt-3 mb-3">
+                    <div class="card" style="width: 18rem;">
+                        <img src="@AppSettingsHelper.GetAppSettings("ImgUrl")" class="card-img-top" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <h6>@item.language</h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>

@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "账户信息设置";
+}
+
+<div class="container">
+
+    <div class="mb-3">
+        <label for="appid" class="form-label">appid：</label>
+        <input type="text" class="form-control" id="appid" name="appid" value="@ViewData["appid"]" autocomplete="off" required />
+        <div class="invalid-feedback">
+            请输入appid
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="appsecret" class="form-label">appsecret：</label>
+        <input type="text" class="form-control" id="appsecret" name="appsecret" value="@ViewData["appsecret"]" autocomplete="off" required />
+        <div class="invalid-feedback">
+            请输入appsecret
+        </div>
+    </div>
+    <div class="mb-3">
+        <button class="btn btn-primary" onclick="SetAccountInfo()">保存</button>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+
+</div>
+
+<script>
+    function SetAccountInfo() {
+        Alert(AlertType.Warning, AlertIcon.Warning, "请输入信息！");
+        //var data = { "appid": $("#appid").val(), "appsecret": $("#appsecret").val() }
+        //fetch("/Account/SetAccountInfo", {
+        //    method: "POST",
+        //    //headers: { 'content-type': 'application/json' },
+        //    //mode: 'cors',
+        //    //credentials: 'include',
+        //    body: data,
+        //})
+        //    .then((response) =>
+        //        response?.json().then(
+        //            (json) => console.log(json),
+        //            (err) => console.log(err),
+        //        ),
+        //    );
+    }
+
+</script>

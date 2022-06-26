@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "dJJSq2BS/82Ghzb47KG9F5VUQpu9nW5zabOPnbkSrzBazVEa/sjEO/VVeeUhSKRxSaHgbBUm+wodMFb5CMU6Gw==",
+  "success": true,
+  "projectFilePath": "F:\\C#\\My\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\98033\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

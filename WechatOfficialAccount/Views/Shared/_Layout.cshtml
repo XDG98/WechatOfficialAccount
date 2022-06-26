@@ -1,0 +1,210 @@
+﻿@using WechatOfficialAccount.Controllers
+@using WechatOfficialAccount.Models.DTO
+@using static WechatOfficialAccount.Controllers.NavBarController
+@using WechatOfficialAccount.Helper
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WechatOfficialAccount</title>
+    @*bootstrap样式-CDN引入*@
+    @*<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">*@
+    @*bootstrap样式-本地引入*@
+    <link rel="stylesheet" href="~/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css" />
+    @*bootstrap图标库-CDN引入*@
+    @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">*@
+    @*bootstrap样式-本地引入*@
+    <link rel="stylesheet" href="~/lib/bootstrap-5.1.3-dist/bootstrap-icons-1.8.3/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WechatOfficialAccount.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-bootstrap"></i>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarScroll">
+                    <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                        @{
+                            Result result = await new NavBarController().GetNavBarList();
+                            if (result.Code == System.Net.HttpStatusCode.OK && result.Data != null)
+                            {
+                                Dictionary<string, List<GetNavBarListDto>> navBarDic = result.Data as Dictionary<string, List<GetNavBarListDto>>;
+                                foreach (var navBar in navBarDic)
+                                {
+                                    if (navBar.Value.Count == 1 && navBar.Value[0].Name == navBar.Key)
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="@navBar.Value[0].AspController" asp-action="@navBar.Value[0].AspAction">@navBar.Key</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                @navBar.Key
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                                @foreach (var item in navBar.Value)
+                                                {
+                                                    <li><a class="dropdown-item" asp-controller="@item.AspController" asp-action="@item.AspAction"><i class="bi bi-@item.Icon"></i>&nbsp;&nbsp;@item.Name</a></li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                            }
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link disabled">更多新功能玩命开发中...</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        @*提示框占位*@
+        <div id="MyAlert" role="alert" style="display: none;">
+            <i></i>
+            <label></label>
+            <button type="button" class="btn-close" onclick="$('#MyAlert').hide();" aria-label="Close"></button>
+        </div>
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+
+        @*推送通知*@
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="@AppSettingsHelper.GetAppSettings("ImgUrl")" width="66" class="rounded me-2" alt="...">
+                    <strong class="me-auto">Bootstrap</strong>
+                    <small>@DateTime.Now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Hello, world! This is a toast message.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-center">
+        <div class="container">
+            &copy; @DateTime.Now.Year - WechatOfficialAccount
+        </div>
+    </footer>
+
+    @*jquery包-CDN引入*@
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    @*bootstrap和js集成包-CDN引入*@
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>*@
+    @*bootstrap和js集成包-本地引入*@
+    <script src="~/lib/bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        //#region 提示框
+        //var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+        //var alertTrigger = document.getElementById('liveAlertBtn');
+        //if (alertTrigger) {
+        //    alertTrigger.addEventListener('click', function() {
+        //        let toastsArray = ["info", "success", "warning", "danger"];
+        //        let iconArray = ["info-circle-fill", "check-circle-fill", "exclamation-circle-fill", "exclamation-triangle-fill"];
+        //        let number = generateRandomInteger(0, 3);
+        //        alert('这是一个提示框！', toastsArray[number], iconArray[number]);
+        //    })
+        //}
+
+        //function alert(message, type, icon) {
+        //    var wrapper = document.createElement('div');
+        //    wrapper.innerHTML = '<div id="myAlert" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+        //        '<i class="bi bi-' + icon + '"></i>&nbsp;&nbsp;' + message +
+        //        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+        //        '</div>';
+
+        //    alertPlaceholder.append(wrapper);
+
+        //    //设置显示指定秒后移除
+        //    setTimeout(function() {
+        //        var alertNode = document.querySelector('.alert');
+        //        var alert = bootstrap.Alert.getInstance(alertNode);
+        //        console.log({ "alertNode": alertNode, "alert": alert });
+        //        alert.closed();
+        //    }, 2000);
+        //}
+
+        //var myAlert = document.getElementById('myAlert');
+        //myAlert.addEventListener('closed.bs.alert', function() {
+        //    console.log("提示框关闭");
+        //});
+        //#endregion
+
+        //#region 推送通知
+        var toastTrigger = document.getElementById('liveToastBtn');
+        var toastLiveExample = document.getElementById('liveToast');
+        if (toastTrigger) {
+            toastTrigger.addEventListener('click', function() {
+                var toast = new bootstrap.Toast(toastLiveExample);
+                toast.show();
+            })
+        }
+        //#endregion
+
+        let toastsArray = ["info", "success", "warning", "danger"];
+        let iconArray = ["info-circle-fill", "check-circle-fill", "exclamation-circle-fill", "exclamation-triangle-fill"];
+
+        function Alert(type, icon, content) {
+            //let number = generateRandomInteger(0, 3);
+            //type = toastsArray[number];
+            //icon = iconArray[number];
+            //content = "这是一个弹窗类型：" + type + "，图标：" + icon;
+
+            var myAlert = $('#MyAlert');
+            myAlert.addClass("alert alert-" + type + " alert-dismissible fade show");
+
+            var myAlertIcon = myAlert.find("i");
+            myAlertIcon.addClass("bi bi-" + icon);
+            var myAlertContent = myAlert.find("label");
+            myAlertContent.html(content);
+
+            myAlert.show();
+
+            setTimeout(function() {
+                myAlert.removeClass();
+                myAlertIcon.removeClass();
+                myAlertContent.html("");
+                myAlert.hide();
+            }, 2000);
+        }
+
+        function generateRandomInteger(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        const AlertType = {
+            Info: "info",
+            Success: "success",
+            Warning: "warning",
+            Danger: "danger",
+        }
+        const AlertIcon = {
+            Info: "info-circle-fill",
+            Success: "check-circle-fill",
+            Warning: "exclamation-circle-fill",
+            Danger: "exclamation-triangle-fill",
+        }
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
