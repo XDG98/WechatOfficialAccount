@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
 using WechatOfficialAccount.Models;
 using WechatOfficialAccount.Models.DTO;
 using static WechatOfficialAccount.Models.Result;
@@ -45,7 +46,7 @@ namespace WechatOfficialAccount.Helper
             }
             catch (Exception ex)
             {
-                result = new Fail(ex.Message);
+                result = new Error(ex.Message);
             }
             return result;
         }
@@ -56,14 +57,17 @@ namespace WechatOfficialAccount.Helper
         /// <param name="url">请求地址</param>
         /// <param name="parameter">请求参数</param>
         /// <returns></returns>
-        public static async Task<Result> WeiXinPost(string url, string parameter)
+        public static async Task<Result> WeiXinPost(string url, object parameter)
         {
             Result result = new Result();
             try
             {
                 HttpClient httpClient = httpClientFactory.CreateClient();
 
-                object jsonResult = await httpClient.PostAsJsonAsync<object>(url, parameter);
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json");
+                HttpResponseMessage httpResponseMessage = await httpClient.PostAsJsonAsync(url, stringContent);
+                httpResponseMessage = await httpClient.PostAsync(url, stringContent);
+                object jsonResult = httpResponseMessage.Content.ReadAsStringAsync().Result;
                 WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(jsonResult.ToString());
                 if (weiXinResult.errcode != 0)
                 {
@@ -76,7 +80,7 @@ namespace WechatOfficialAccount.Helper
             }
             catch (Exception ex)
             {
-                result = new Fail(ex.Message);
+                result = new Error(ex.Message);
             }
             return result;
         }
@@ -98,7 +102,7 @@ namespace WechatOfficialAccount.Helper
             }
             catch (Exception ex)
             {
-                result = new Fail(ex.Message);
+                result = new Error(ex.Message);
             }
             return result;
         }
@@ -109,19 +113,20 @@ namespace WechatOfficialAccount.Helper
         /// <param name="url">请求地址</param>
         /// <param name="parameter">请求参数</param>
         /// <returns></returns>
-        public static async Task<Result> Post(string url, string parameter)
+        public static async Task<Result> Post(string url, object parameter)
         {
             Result result = new Result();
             try
             {
                 HttpClient httpClient = httpClientFactory.CreateClient();
 
-                object jsonResult = await httpClient.PostAsJsonAsync<object>(url, parameter);
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json");
+                object jsonResult = await httpClient.PostAsJsonAsync<object>(url, stringContent);
                 return new Success(jsonResult);
             }
             catch (Exception ex)
             {
-                result = new Fail(ex.Message);
+                result = new Error(ex.Message);
             }
             return result;
         }

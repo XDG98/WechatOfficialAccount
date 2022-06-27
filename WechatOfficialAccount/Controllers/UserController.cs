@@ -27,7 +27,7 @@ namespace WechatOfficialAccount.Controllers
         {
             List<GetUserInfoDto> getUserInfoDtoList = new List<GetUserInfoDto>();
 
-            Result result = await userService.GetUserList();
+            Result result = await GetUserList();
             if (result.Code == HttpStatusCode.OK)
             {
                 GetUserListDto getUserListDto = (GetUserListDto)result.Data;
@@ -110,11 +110,92 @@ namespace WechatOfficialAccount.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("/User/UpdateRemark")]
-        public async Task<Result> UpdateRemark(UpdateRemarkParameter data)
+        public async Task<Result> UpdateRemark(UpdateRemarkParameter parameter)
         {
-            data.openid = "oDDlM5ov88KTb-Jsqip-1AqdAeYU";
-            data.remark = "123";
-            return await userService.UpdateRemark(data);
+            parameter.openid = "oDDlM5ov88KTb-Jsqip-1AqdAeYU";
+            parameter.remark = "123";
+            return await userService.UpdateRemark(parameter);
+        }
+
+        /// <summary>
+        /// 公众号已创建的标签页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/UserTagPage")]
+        public async Task<IActionResult> UserTagPage()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取公众号已创建的标签列表
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/GetUserTagList")]
+        public async Task<Result> GetUserTagList()
+        {
+            Result result = await userService.GetUserTagList();
+            if (result.Code == HttpStatusCode.OK)
+            {
+                GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
+                return new Success(getUserTagListDto);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 获取公众号已创建的标签列表
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/GetUserTagDtoList")]
+        public async Task<object> GetUserTagDtoList()
+        {
+            SearchParameter searchParameter = new SearchParameter();
+            searchParameter.search = this.HttpContext.Request.Query["search"];
+            searchParameter.sort = this.HttpContext.Request.Query["sort"];
+            searchParameter.offset = int.Parse(this.HttpContext.Request.Query["offset"]);
+            searchParameter.limit = int.Parse(this.HttpContext.Request.Query["limit"]);
+
+            Result result = await userService.GetUserTagList();
+            if (result.Code == HttpStatusCode.OK)
+            {
+                GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
+
+                if (!string.IsNullOrEmpty(searchParameter.search))
+                {
+                    getUserTagListDto.tags = getUserTagListDto.tags.Where(item => item.id.ToString().Contains(searchParameter.search) || item.name.Contains(searchParameter.search)).ToList();
+                }
+                //if (searchParameter.sort != "sequence")
+                //{
+                //    getUserTagListDto.tags = getUserTagListDto.tags.OrderByDescending(item => item.id).ToList();
+                //}
+                SearchDto searchDto = new SearchDto();
+                searchDto.total = getUserTagListDto.tags.Count;
+                searchDto.rows = getUserTagListDto.tags.Skip(searchParameter.offset).Take(searchParameter.limit).ToList();
+                return searchDto;
+            }
+            throw new Exception("fail");
+        }
+
+        /// <summary>
+        /// 创建标签
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/CreateTag")]
+        public async Task<Result> CreateTag(CreateTagParameter parameter)
+        {
+            Result result = await userService.CreateTag(parameter);
+            if (result.Code == HttpStatusCode.OK)
+            {
+                GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
+                return new Success(getUserTagListDto);
+            }
+            return result;
         }
     }
 }

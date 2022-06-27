@@ -12,11 +12,11 @@ namespace WechatOfficialAccount.Models
         /// <summary>
         /// 响应消息
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        public string Message { get; set; }
         /// <summary>
         /// 响应数据
         /// </summary>
-        public object Data { get; set; } = new object();
+        public object Data { get; set; }
 
         #region 请求响应
         /// <summary>
@@ -29,13 +29,11 @@ namespace WechatOfficialAccount.Models
             {
                 this.Code = HttpStatusCode.OK;
                 this.Message = "ok";
-                this.Data = new object();
             }
             public Success(string info)
             {
                 this.Code = HttpStatusCode.OK;
                 this.Message = info;
-                this.Data = new object();
             }
             public Success(object data)
             {
@@ -60,13 +58,11 @@ namespace WechatOfficialAccount.Models
             {
                 this.Code = HttpStatusCode.BadRequest;
                 this.Message = "fail";
-                this.Data = new object();
             }
             public Fail(string info)
             {
                 this.Code = HttpStatusCode.BadRequest;
                 this.Message = info;
-                this.Data = new object();
             }
             public Fail(object data)
             {
@@ -77,6 +73,35 @@ namespace WechatOfficialAccount.Models
             public Fail(string info, object data)
             {
                 this.Code = HttpStatusCode.BadRequest;
+                this.Message = info;
+                this.Data = data;
+            }
+        }
+
+        /// <summary>
+        /// 错误
+        /// </summary>
+        public class Error : Result
+        {
+            public Error()
+            {
+                this.Code = HttpStatusCode.InternalServerError;
+                this.Message = "error";
+            }
+            public Error(string info)
+            {
+                this.Code = HttpStatusCode.InternalServerError;
+                this.Message = info;
+            }
+            public Error(object data)
+            {
+                this.Code = HttpStatusCode.InternalServerError;
+                this.Message = "error";
+                this.Data = data;
+            }
+            public Error(string info, object data)
+            {
+                this.Code = HttpStatusCode.InternalServerError;
                 this.Message = info;
                 this.Data = data;
             }

@@ -87,14 +87,14 @@ namespace WechatOfficialAccount.Controllers
         }
 
         /// <summary>
-        /// 微信服务器地址信息列表页面
+        /// 微信服务器地址信息页面
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("/Account/IpAddressPage")]
         public async Task<IActionResult> IpAddressPage()
         {
-            Result result = await accountService.GetIpAddressList();
+            Result result = await GetIpAddressList();
             if (result.Code == HttpStatusCode.OK)
             {
                 ViewData["GetIpAddressDtoList"] = result.Data as List<GetIpAddressDto>;

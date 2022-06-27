@@ -47,7 +47,6 @@ namespace WechatOfficialAccount.Services
         {
             string url = $"{WeiXinApi}/token?grant_type=client_credential&appid={appid}&secret={appsecret}";
             Result result = await HttpClienttHelper.WeiXinGet(url);
-            #region 设置
             if (result.Code == HttpStatusCode.OK)
             {
                 GetAccessTokenDto getAccessTokenDto = JsonConvert.DeserializeObject<GetAccessTokenDto>(result.Data.ToString());
@@ -55,7 +54,6 @@ namespace WechatOfficialAccount.Services
                 await AppSettingsHelper.SaveAppSettings("expires_in", DateTime.Now.AddSeconds(getAccessTokenDto.expires_in).ToString());
                 result = new Success(getAccessTokenDto);
             }
-            #endregion
             return result;
         }
 
@@ -78,7 +76,7 @@ namespace WechatOfficialAccount.Services
         /// <summary>
         /// 根据IP获取物理地址
         /// </summary>
-        /// <param name="ip"></param>
+        /// <param name="ip">IP地址</param>
         /// <returns></returns>
         public async Task<Result> GetIpAddress(string ip)
         {

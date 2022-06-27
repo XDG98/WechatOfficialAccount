@@ -61,7 +61,7 @@ namespace WechatOfficialAccount.Services
             {
                 batchGetUserInfoParameter.user_list.Add(new UserListData() { openid = item, lang = "zh_CN" });
             }
-            Result result = await HttpClienttHelper.WeiXinPost(url, JsonConvert.SerializeObject(batchGetUserInfoParameter));
+            Result result = await HttpClienttHelper.WeiXinPost(url, batchGetUserInfoParameter);
             if (result.Code == HttpStatusCode.OK)
             {
                 BatchGetUserInfoDto batchGetUserInfoDto = JsonConvert.DeserializeObject<BatchGetUserInfoDto>(result.Data.ToString());
@@ -75,10 +75,47 @@ namespace WechatOfficialAccount.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<Result> UpdateRemark(UpdateRemarkParameter data)
+        public async Task<Result> UpdateRemark(UpdateRemarkParameter parameter)
         {
             string url = $"{WeiXinApi}/user/info/updateremark?access_token={access_token}";
-            Result result = await HttpClienttHelper.WeiXinPost(url, JsonConvert.SerializeObject(data));
+            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
+            if (result.Code == HttpStatusCode.OK)
+            {
+                result = new Success(result.Data);
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// 获取公众号已创建的标签列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result> GetUserTagList()
+        {
+            string url = $"{WeiXinApi}/tags/get?access_token={access_token}";
+            Result result = await HttpClienttHelper.WeiXinGet(url);
+            if (result.Code == HttpStatusCode.OK)
+            {
+                GetUserTagListDto getUserTagListDto = JsonConvert.DeserializeObject<GetUserTagListDto>(result.Data.ToString());
+                result = new Success(getUserTagListDto);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 创建标签
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result> CreateTag(CreateTagParameter parameter)
+        {
+            string url = $"{WeiXinApi}/tags/create?access_token={access_token}";
+            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
+            if (result.Code == HttpStatusCode.OK)
+            {
+                GetUserTagListDto getUserTagListDto = JsonConvert.DeserializeObject<GetUserTagListDto>(result.Data.ToString());
+                result = new Success(getUserTagListDto);
+            }
             return result;
         }
     }

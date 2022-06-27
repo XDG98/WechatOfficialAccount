@@ -28,7 +28,7 @@ namespace WechatOfficialAccount.Services.Interface
         /// <summary>
         /// 根据IP获取物理地址
         /// </summary>
-        /// <param name="ip"></param>
+        /// <param name="ip">IP地址</param>
         /// <returns></returns>
         Task<Result> GetIpAddress(string ip);
         /// <summary>

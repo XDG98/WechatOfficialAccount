@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "用户管理-获取公众号已创建的标签";
+}
+
+<div class="container">
+    <table id="table"></table>
+</div>
+
+@section Scripts{
+    <script>
+        $('#table').bootstrapTable({
+            url: '/User/GetUserTagDtoList',
+            pagination: true,
+            columns: [{
+                field: 'id',
+                title: '标签ID'
+            }, {
+                field: 'name',
+                title: '标签名'
+            }, {
+                field: 'count',
+                title: '标签下粉丝数'
+            },
+            {
+                field: 'operate', title: '操作', align: 'center', valign: 'middle', formatter: operateFormatter
+            }],
+            search: true,//搜索框
+            classes: 'table table-bordered table-striped table-condensed table-hover',
+            method: 'get',//bootstrap默认的内置请求方式
+            sortName: 'sequence',//默认排序列
+            queryParamsType: 'limit',//查询参数组织方式
+            sidePagination: 'server',//指定服务器端分页
+            pagination: true,//是否分页，即分页按钮
+            pageSize: 3,//单页记录数
+            pageList: [3, 5, 8],//分页步进值
+            paginationHAlign: 'right',//分页条水平对齐
+            paginationVAlign: 'bottom',//分页条垂直对齐
+            singleSelect: true,//只能选中一行
+            clickToSelect: true,//点击选中行
+            toolbar: '#tb_student',//自定义工具栏对齐方式
+            locale: 'zh-CN',//支持中文
+            onLoadSuccess: function(data) {//加载成功时执行
+            },
+            onLoadError: function(status, res) {//加载失败时执行
+                AlertFail("表格加载失败：" + res.responseJSON.title);
+            },
+            onClickRow: function(row) {
+                console.log({ "row": row });
+            }
+        })
+
+        //自定义操作列
+        function operateFormatter(value, row, index) {
+            var result = "";
+            var obj = JSON.stringify(row);
+            result += "<button type='button' class='btn btn-sm btn-info m-1 mt-0' onclick='viewRow(" + obj + ")'>详情</button>";
+            result += "<button type='button' class='btn btn-sm btn-warning m-1 mt-0' onclick='updateRow(" + obj + ")'>编辑</button>";
+            result += "<button type='button' class='btn btn-sm btn-danger m-1 mt-0' onclick='deleteRow(" + obj + ")'>删除</button>";
+            
+            return result;
+        };
+
+        //详情
+        function viewRow(obj) {
+            AlertSuccess(obj.id);
+        }
+
+        //编辑
+        function updateRow(obj) {
+            AlertSuccess(obj.id);
+        }
+
+        //删除
+        function deleteRow(obj) {
+            AlertSuccess(obj.id);
+        }
+    </script>
+}

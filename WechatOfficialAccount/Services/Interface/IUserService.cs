@@ -31,6 +31,19 @@ namespace WechatOfficialAccount.Services.Interface
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        Task<Result> UpdateRemark(UpdateRemarkParameter data);
+        Task<Result> UpdateRemark(UpdateRemarkParameter parameter);
+
+        /// <summary>
+        /// 获取公众号已创建的标签
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task<Result> GetUserTagList();
+        /// <summary>
+        /// 创建标签
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task<Result> CreateTag(CreateTagParameter parameter);
     }
 }
