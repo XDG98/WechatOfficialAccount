@@ -3,9 +3,12 @@ using Newtonsoft.Json;
 using System.Net;
 using WechatOfficialAccount.Models;
 using WechatOfficialAccount.Models.DTO;
+using WechatOfficialAccount.Models.Entity;
 using WechatOfficialAccount.Models.Parameter;
 using WechatOfficialAccount.Services;
 using WechatOfficialAccount.Services.Interface;
+using static WechatOfficialAccount.Models.Entity.Tag;
+using static WechatOfficialAccount.Models.Parameter.CreateTagParameter;
 using static WechatOfficialAccount.Models.Result;
 
 namespace WechatOfficialAccount.Controllers
@@ -118,13 +121,32 @@ namespace WechatOfficialAccount.Controllers
         }
 
         /// <summary>
-        /// 公众号已创建的标签页面
+        /// 公众号已创建的标签列表页面
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("/User/UserTagPage")]
         public async Task<IActionResult> UserTagPage()
         {
+            return View();
+        }
+        /// <summary>
+        /// 新增、编辑标签页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/UserTagForm/{id?}")]
+        public async Task<IActionResult> UserTagForm(string? id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                Tag tag = new Tag();
+                SearchDto searchDto = await GetUserTagDtoList(new SearchParameter() { search = id }) as SearchDto;
+                List<TagDetail> tagDetailList = searchDto.rows as List<TagDetail>;
+                tag.tag = tagDetailList[0];
+                ViewData["Tag"] = tag.tag;
+            }
+
             return View();
         }
         /// <summary>
@@ -151,22 +173,16 @@ namespace WechatOfficialAccount.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("/User/GetUserTagDtoList")]
-        public async Task<object> GetUserTagDtoList()
+        public async Task<object> GetUserTagDtoList([FromQuery] SearchParameter parameter)
         {
-            SearchParameter searchParameter = new SearchParameter();
-            searchParameter.search = this.HttpContext.Request.Query["search"];
-            searchParameter.sort = this.HttpContext.Request.Query["sort"];
-            searchParameter.offset = int.Parse(this.HttpContext.Request.Query["offset"]);
-            searchParameter.limit = int.Parse(this.HttpContext.Request.Query["limit"]);
-
             Result result = await userService.GetUserTagList();
             if (result.Code == HttpStatusCode.OK)
             {
                 GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
 
-                if (!string.IsNullOrEmpty(searchParameter.search))
+                if (!string.IsNullOrEmpty(parameter.search))
                 {
-                    getUserTagListDto.tags = getUserTagListDto.tags.Where(item => item.id.ToString().Contains(searchParameter.search) || item.name.Contains(searchParameter.search)).ToList();
+                    getUserTagListDto.tags = getUserTagListDto.tags.Where(item => item.id.ToString().Contains(parameter.search) || item.name.Contains(parameter.search)).ToList();
                 }
                 //if (searchParameter.sort != "sequence")
                 //{
@@ -174,27 +190,50 @@ namespace WechatOfficialAccount.Controllers
                 //}
                 SearchDto searchDto = new SearchDto();
                 searchDto.total = getUserTagListDto.tags.Count;
-                searchDto.rows = getUserTagListDto.tags.Skip(searchParameter.offset).Take(searchParameter.limit).ToList();
+                searchDto.rows = getUserTagListDto.tags.Skip(parameter.offset).Take(parameter.limit).ToList();
                 return searchDto;
             }
-            throw new Exception("fail");
+            return null;
         }
-
         /// <summary>
         /// 创建标签
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("/User/CreateTag")]
-        public async Task<Result> CreateTag(CreateTagParameter parameter)
+        public async Task<Result> CreateTag([FromBody] TagParameter parameter)
         {
-            Result result = await userService.CreateTag(parameter);
+            Result result = await userService.CreateTag(new CreateTagParameter() { tag = parameter });
             if (result.Code == HttpStatusCode.OK)
             {
                 GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
                 return new Success(getUserTagListDto);
             }
+            return result;
+        }
+        /// <summary>
+        /// 编辑标签
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("/User/UpdateTag")]
+        public async Task<Result> UpdateTag([FromBody] TagDetail parameter)
+        {
+            Result result = await userService.UpdateTag(new Tag() { tag = parameter });
+            return result;
+        }
+        /// <summary>
+        /// 删除标签
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("/User/DeleteTag")]
+        public async Task<Result> DeleteTag([FromBody] TagDetail parameter)
+        {
+            Result result = await userService.UpdateTag(new Tag() { tag = parameter });
             return result;
         }
     }

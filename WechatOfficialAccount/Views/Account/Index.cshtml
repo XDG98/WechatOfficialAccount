@@ -4,7 +4,7 @@
 
 <div class="container">
 
-    <form>
+    <form method="post">
         <div class="mb-3">
             <label for="appid" class="form-label">appid：</label>
             <input type="text" class="form-control" id="appid" name="appid" value="@ViewData["appid"]" autocomplete="off" required />
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="mb-3">
-            <button type="button" class="btn btn-primary" onclick="SetAccountInfo()">保存</button>
+            <button type="submit" class="btn btn-primary" asp-controller="Account" asp-action="SetAccountInfo">保存</button>
         </div>
     </form>
 
@@ -29,7 +29,6 @@
 <script>
     function SetAccountInfo() {
         if (true) {
-            console.log(data);
             AlertSuccess("保存成功！");
         }
 

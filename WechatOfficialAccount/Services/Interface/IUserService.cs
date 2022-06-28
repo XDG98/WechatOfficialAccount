@@ -1,5 +1,5 @@
 ﻿using WechatOfficialAccount.Models;
-using WechatOfficialAccount.Models.DTO;
+using WechatOfficialAccount.Models.Entity;
 using WechatOfficialAccount.Models.Parameter;
 
 namespace WechatOfficialAccount.Services.Interface
@@ -29,21 +29,32 @@ namespace WechatOfficialAccount.Services.Interface
         /// <summary>
         /// 设置用户备注名
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
         Task<Result> UpdateRemark(UpdateRemarkParameter parameter);
 
         /// <summary>
         /// 获取公众号已创建的标签
         /// </summary>
-        /// <param name="data"></param>
         /// <returns></returns>
         Task<Result> GetUserTagList();
         /// <summary>
         /// 创建标签
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
         Task<Result> CreateTag(CreateTagParameter parameter);
+        /// <summary>
+        /// 编辑标签
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        Task<Result> UpdateTag(Tag parameter);
+        /// <summary>
+        /// 删除标签
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        Task<Result> DeleteTag(Tag parameter);
     }
 }

@@ -8,18 +8,18 @@
         /// <summary>
         /// 搜索内容
         /// </summary>
-        public string search { get; set; }
+        public string? search { get; set; }
         /// <summary>
         /// 排序
         /// </summary>
-        public string sort { get; set; }
+        public string? sort { get; set; }
         /// <summary>
         /// 跳过条数
         /// </summary>
-        public int offset { get; set; }
+        public int offset { get; set; } = 0;
         /// <summary>
         /// 每页条数
         /// </summary>
-        public int limit { get; set; }
+        public int limit { get; set; } = 10;
     }
 }

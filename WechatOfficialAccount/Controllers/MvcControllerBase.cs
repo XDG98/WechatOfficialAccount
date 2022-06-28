@@ -15,11 +15,11 @@ namespace WechatOfficialAccount.Controllers
         public static DateTime expires_in;
         public MvcControllerBase()
         {
-            appid = AppSettingsHelper.GetAppSettings("appid");
-            appsecret = AppSettingsHelper.GetAppSettings("appsecret");
-            WeiXinApi = AppSettingsHelper.GetAppSettings("WeiXinApi");
-            access_token = AppSettingsHelper.GetAppSettings("access_token");
-            DateTime.TryParse(AppSettingsHelper.GetAppSettings("expires_in"), out DateTime expiresIn);
+            appid = AppSettingsHelper.GetWeiXinConfig("appid");
+            appsecret = AppSettingsHelper.GetWeiXinConfig("appsecret");
+            WeiXinApi = AppSettingsHelper.GetWeiXinConfig("WeiXinApi");
+            access_token = AppSettingsHelper.GetWeiXinConfig("access_token");
+            DateTime.TryParse(AppSettingsHelper.GetWeiXinConfig("expires_in"), out DateTime expiresIn);
             expires_in = expiresIn;
         }
     }

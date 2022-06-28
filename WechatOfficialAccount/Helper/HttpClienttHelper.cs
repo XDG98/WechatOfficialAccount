@@ -32,12 +32,13 @@ namespace WechatOfficialAccount.Helper
             try
             {
                 HttpClient httpClient = httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
                 object jsonResult = await httpClient.GetFromJsonAsync<object>(url);
                 WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(jsonResult.ToString());
                 if (weiXinResult.errcode != 0)
                 {
-                    result = new Fail(weiXinResult);
+                    result = new Fail(WeiXinResult.GetMessage(weiXinResult), weiXinResult);
                 }
                 else
                 {
@@ -63,6 +64,7 @@ namespace WechatOfficialAccount.Helper
             try
             {
                 HttpClient httpClient = httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
                 StringContent stringContent = new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json");
                 HttpResponseMessage httpResponseMessage = await httpClient.PostAsJsonAsync(url, stringContent);
@@ -71,7 +73,7 @@ namespace WechatOfficialAccount.Helper
                 WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(jsonResult.ToString());
                 if (weiXinResult.errcode != 0)
                 {
-                    result = new Fail(weiXinResult);
+                    result = new Fail(WeiXinResult.GetMessage(weiXinResult), weiXinResult);
                 }
                 else
                 {
@@ -96,6 +98,7 @@ namespace WechatOfficialAccount.Helper
             try
             {
                 HttpClient httpClient = httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
                 object jsonResult = await httpClient.GetFromJsonAsync<object>(url);
                 result = new Success(jsonResult);
@@ -119,10 +122,11 @@ namespace WechatOfficialAccount.Helper
             try
             {
                 HttpClient httpClient = httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.ConnectionClose = true;
 
                 StringContent stringContent = new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, "application/json");
                 object jsonResult = await httpClient.PostAsJsonAsync<object>(url, stringContent);
-                return new Success(jsonResult);
+                result = new Success(jsonResult);
             }
             catch (Exception ex)
             {

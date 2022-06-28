@@ -1,0 +1,43 @@
+﻿@using WechatOfficialAccount.Controllers
+@using WechatOfficialAccount.Models.DTO
+@{
+    ViewData["Title"] = "自定义菜单管理-自定义菜单";
+}
+
+<div class="container">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarScroll">
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    @{
+                        Result result = await new SelfMenuController().GetCurrentSelfmenuInfo();
+                        @if (result.Code == System.Net.HttpStatusCode.OK && result.Data != null)
+                        {
+                            GetCurrentSelfmenuInfoDto getCurrentSelfmenuInfoDto = result.Data as GetCurrentSelfmenuInfoDto;
+                            foreach (ButtonItemDto buttonItemDto in getCurrentSelfmenuInfoDto.selfmenu_info.button)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        @buttonItemDto.name
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                        @foreach (ListItem item in @buttonItemDto.sub_button.list)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="" asp-action="">@item.name</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</div>
+
+<script>
+
+</script>

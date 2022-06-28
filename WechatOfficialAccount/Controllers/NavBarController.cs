@@ -15,7 +15,7 @@ namespace WechatOfficialAccount.Controllers
     [Route("NavBar")]
     public class NavBarController : Controller
     {
-        private INavBarService navBarService;
+        private readonly INavBarService navBarService;
         public NavBarController()
         {
             navBarService = new NavBarService();

@@ -12,11 +12,6 @@ namespace WechatOfficialAccount.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         public new IActionResult NotFound()
         {
             return View();

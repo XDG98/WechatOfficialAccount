@@ -4,6 +4,7 @@ using WechatOfficialAccount.Controllers;
 using WechatOfficialAccount.Helper;
 using WechatOfficialAccount.Models;
 using WechatOfficialAccount.Models.DTO;
+using WechatOfficialAccount.Models.Entity;
 using WechatOfficialAccount.Models.Parameter;
 using WechatOfficialAccount.Services.Interface;
 using static WechatOfficialAccount.Models.Result;
@@ -102,7 +103,6 @@ namespace WechatOfficialAccount.Services
             }
             return result;
         }
-
         /// <summary>
         /// 创建标签
         /// </summary>
@@ -115,6 +115,34 @@ namespace WechatOfficialAccount.Services
             {
                 GetUserTagListDto getUserTagListDto = JsonConvert.DeserializeObject<GetUserTagListDto>(result.Data.ToString());
                 result = new Success(getUserTagListDto);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 编辑标签
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public async Task<Result> UpdateTag(Tag parameter)
+        {
+            string url = $"{WeiXinApi}/tags/update?access_token={access_token}";
+            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
+            if (result.Code == HttpStatusCode.OK)
+            {
+                WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(result.Data.ToString());
+                result = new Success(weiXinResult);
+            }
+            return result;
+        }
+
+        public async Task<Result> DeleteTag(Tag parameter)
+        {
+            string url = $"{WeiXinApi}/tags/delete?access_token={access_token}";
+            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
+            if (result.Code == HttpStatusCode.OK)
+            {
+                WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(result.Data.ToString());
+                result = new Success(weiXinResult);
             }
             return result;
         }

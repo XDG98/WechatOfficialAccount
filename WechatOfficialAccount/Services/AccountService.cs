@@ -34,7 +34,7 @@ namespace WechatOfficialAccount.Services
             }
             if (dataDic.Count > 0)
             {
-                result = await AppSettingsHelper.SaveAppSettings(dataDic);
+                result = await AppSettingsHelper.SaveWeiXinConfig(dataDic);
             }
             return result;
         }
@@ -50,8 +50,10 @@ namespace WechatOfficialAccount.Services
             if (result.Code == HttpStatusCode.OK)
             {
                 GetAccessTokenDto getAccessTokenDto = JsonConvert.DeserializeObject<GetAccessTokenDto>(result.Data.ToString());
-                await AppSettingsHelper.SaveAppSettings("access_token", getAccessTokenDto.access_token);
-                await AppSettingsHelper.SaveAppSettings("expires_in", DateTime.Now.AddSeconds(getAccessTokenDto.expires_in).ToString());
+                Dictionary<string, string> dataDic = new Dictionary<string, string>();
+                dataDic.Add("access_token", getAccessTokenDto.access_token);
+                dataDic.Add("expires_in", DateTime.Now.AddSeconds(getAccessTokenDto.expires_in).ToString());
+                await AppSettingsHelper.SaveWeiXinConfig(dataDic);
                 result = new Success(getAccessTokenDto);
             }
             return result;

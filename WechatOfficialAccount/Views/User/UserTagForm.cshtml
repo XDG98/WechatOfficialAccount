@@ -1,0 +1,71 @@
+﻿@using System.Net
+@using static WechatOfficialAccount.Models.Entity.Tag
+@{
+    ViewData["Title"] = "用户管理-标签设置";
+    TagDetail tag = ViewData["Tag"] as TagDetail;
+}
+
+<div class="container">
+
+    <div class="mb-3">
+        <label for="appid" class="form-label">标签Id：</label>
+        <input type="number" disabled class="form-control" id="id" name="id" value="@tag?.id" autocomplete="off" required />
+    </div>
+    <div class="mb-3">
+        <label for="appsecret" class="form-label">标签名称：</label>
+        <input type="text" class="form-control" id="name" name="name" value="@tag?.name" autocomplete="off" required />
+        <div class="invalid-feedback">
+            请输入标签名称
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="appsecret" class="form-label">此标签下粉丝数：</label>
+        <input type="number" disabled class="form-control" id="count" name="count" value="@tag?.count" autocomplete="off" />
+    </div>
+    @{
+        if (string.IsNullOrEmpty(@tag?.id.ToString()))
+        {
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" onclick="CreateTag()">新增</button>
+            </div>
+        }
+        else
+        {
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" onclick="UpdateTag()">保存</button>
+            </div>
+        }
+    }
+
+</div>
+
+<script>
+    //新增标签
+    function CreateTag() {
+        var tagParameter = {};
+        tagParameter.name = $("#name").val();
+        $.post({
+            url: "/User/CreateTag",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(tagParameter),
+            success: function(res) {
+                Alert(res);
+            }
+        })
+    }
+
+    //编辑标签
+    function UpdateTag() {
+        var tagDetail = {};
+        tagDetail.id = $("#id").val();
+        tagDetail.name = $("#name").val();
+        $.post({
+            url: "/User/UpdateTag",
+            contentType: "application/json;charset=UTF-8",
+            data: JSON.stringify(tagDetail),
+            success: function(res) {
+                Alert(res);
+            }
+        })
+    }
+</script>

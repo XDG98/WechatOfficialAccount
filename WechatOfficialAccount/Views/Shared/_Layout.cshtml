@@ -1,10 +1,11 @@
-﻿@using WechatOfficialAccount.Controllers
+﻿@using System.Net
+@using WechatOfficialAccount.Controllers
 @using WechatOfficialAccount.Models.DTO
 @using static WechatOfficialAccount.Controllers.NavBarController
 @using WechatOfficialAccount.Helper
 
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -210,9 +211,9 @@
         }
         function Toast() {
             var myToast = $('#MyToast');
-            var myToast = new bootstrap.Toast(myToast);
             var toastBody = myToast.find("div[class=toast-body]");
             toastBody.html("通知内容");
+            var myToast = new bootstrap.Toast(myToast);
             myToast.show();
         }
         //#endregion
@@ -225,21 +226,39 @@
          * content：提示内容
          */
         function AlertSuccess(content) {
-            Alert(AlertType.Success, AlertIcon.Success, content);
+            DefinedAlert(AlertType.Success, AlertIcon.Success, content);
         }
         /**
          * 失败提示
          * content：提示内容
          */
         function AlertFail(content) {
-            Alert(AlertType.Warning, AlertIcon.Warning, content);
+            DefinedAlert(AlertType.Warning, AlertIcon.Warning, content);
         }
         /**
          * 错误提示
          * content：提示内容
          */
         function AlertError(content) {
-            Alert(AlertType.Danger, AlertIcon.Danger, content);
+            DefinedAlert(AlertType.Danger, AlertIcon.Danger, content);
+        }
+        /**
+         * 自定义提示
+         * code：响应状态码
+         * content：提示内容
+         */
+        function Alert(res) {
+            switch (res.code) {
+                case @HttpStatusCode.OK.GetHashCode():
+                    AlertSuccess("操作成功！");
+                    break;
+                case @HttpStatusCode.BadRequest.GetHashCode():
+                    AlertFail(res.message);
+                    break;
+                case @HttpStatusCode.InternalServerError.GetHashCode():
+                    AlertError(res.message);
+                    break;
+            }
         }
         /**
          * 自定义提示
@@ -247,12 +266,7 @@
          * icon：提示图标
          * content：提示内容
          */
-        function Alert(type, icon, content) {
-            //let number = generateRandomInteger(0, 3);
-            //type = toastsArray[number];
-            //icon = iconArray[number];
-            //content = "这是一个提示类型：" + type + "，图标：" + icon;
-
+        function DefinedAlert(type, icon, content) {
             var myAlert = $('#MyAlert');
             myAlert.addClass("alert alert-" + type + " alert-dismissible fade show");
 
@@ -268,7 +282,7 @@
                 myAlertIcon.removeClass();
                 myAlertContent.html("");
                 myAlert.hide();
-            }, 1000);
+            }, @AppSettingsHelper.GetSystemConfig("AlertTime"));
         }
 
         /**

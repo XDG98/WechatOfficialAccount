@@ -1,0 +1,27 @@
+﻿@using WechatOfficialAccount.Helper
+@{
+    ViewData["Title"] = "系统管理-系统设置";
+}
+
+<div class="container">
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="AlertTime" class="form-label">提示框展示时间(毫秒)：</label>
+            <input type="number" class="form-control" id="AlertTime" name="AlertTime" value="@AppSettingsHelper.GetSystemConfig("AlertTime")" autocomplete="off" required />
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" asp-controller="System" asp-action="Save">保存</button>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    function SetAccountInfo() {
+        if (true) {
+            AlertSuccess("保存成功！");
+        }
+    }
+</script>
