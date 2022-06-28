@@ -3,12 +3,15 @@
 }
 
 <div class="container">
-    <button type="button" class="btn btn-primary" action="/User/UserTagForm">新增</button>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#MyModal">新增</button>
     <table id="table" class="table"></table>
+
 </div>
 
 @section Scripts{
     <script>
+
         $('#table').bootstrapTable({
             url: '/User/GetUserTagDtoList',
             pagination: true,
@@ -32,8 +35,8 @@
             queryParamsType: 'limit',//查询参数组织方式
             sidePagination: 'server',//指定服务器端分页
             pagination: true,//是否分页，即分页按钮
-            pageSize: 10,//单页记录数
-            pageList: [10, 50, 100],//分页步进值
+            pageSize: 5,//单页记录数
+            pageList: [5, 10, 20],//分页步进值
             paginationHAlign: 'right',//分页条水平对齐
             paginationVAlign: 'bottom',//分页条垂直对齐
             singleSelect: true,//只能选中一行
@@ -46,7 +49,7 @@
                 AlertFail("表格加载失败：" + res.responseJSON.title);
             },
             onClickRow: function(row) {
-                //console.log({ "row": row });
+                console.log({ "row": row });
             }
         })
 
@@ -54,8 +57,9 @@
         function operateFormatter(value, row, index) {
             var result = "";
             var obj = JSON.stringify(row);
-            result += "<button type='button' class='btn btn-sm btn-warning m-1 mt-0' onclick='UserTagForm(" + obj + ")'>编辑</button>";
-            result += "<button type='button' class='btn btn-sm btn-danger m-1 mt-0' onclick='DeleteTag(" + obj + ")'>删除</button>";
+            //result += '<button type="button" class="btn btn-sm btn-warning m-1" onclick="UserTagForm("' + obj + '")">编辑</button>';
+            result += '<button type="button" class="btn btn-sm btn-warning m-1" data-bs-toggle="modal" data-bs-target="#MyModal" data-bs-id="' + row.id + '" data-bs-name="' + row.name + '" data-bs-count="' + row.count + '">编辑</button>';
+            result += '<button type="button" class="btn btn-sm btn-danger m-1" onclick="DeleteTag("' + obj + '")">删除</button>';
             return result;
         };
 

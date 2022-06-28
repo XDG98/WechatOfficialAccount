@@ -133,6 +133,40 @@
         <button type="button" class="btn btn-primary" onclick="Toast()">Show live toast</button>
     </div>
 
+    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="appid" class="form-label">标签Id：</label>
+                            <input type="number" disabled class="form-control" id="id" name="id" autocomplete="off" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="appsecret" class="form-label">标签名称：</label>
+                            <input type="text" class="form-control" id="name" name="name" autocomplete="off" required />
+                            <div class="invalid-feedback">
+                                请输入标签名称
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appsecret" class="form-label">此标签下粉丝数：</label>
+                            <input type="number" disabled class="form-control" id="count" name="count" autocomplete="off" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="border-top footer text-center">
         <div class="container">
             &copy; @DateTime.Now.Year - WechatOfficialAccount
@@ -163,6 +197,31 @@
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
+        var myModal = document.getElementById('MyModal');
+        myModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            // Extract info from data-bs-* attributes
+            var id = button.getAttribute('data-bs-id');
+            var name = button.getAttribute('data-bs-name');
+            var count = button.getAttribute('data-bs-count');
+            // If necessary, you could initiate an AJAX request here
+            // and then do the updating in a callback.
+            //
+            // Update the modal's content.
+            var modalTitle = myModal.querySelector('.modal-title');
+            var modalBodyId = myModal.querySelector('.modal-body input[id="id"]');
+            var modalBodyName = myModal.querySelector('.modal-body input[id="name"]');
+            var modalBodyCount = myModal.querySelector('.modal-body input[id="count"]');
+
+            modalTitle.textContent = '编辑';
+            modalBodyId.value = id;
+            modalBodyName.value = name;
+            modalBodyCount.value = count;
+        })
+
+        function Save(fun) {
+            console.log({ "fun": fun });
+        }
 
         //#region 提示框
         //var alertPlaceholder = document.getElementById('liveAlertPlaceholder');

@@ -25,15 +25,15 @@
     @{
         if (string.IsNullOrEmpty(@tag?.id.ToString()))
         {
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="CreateTag()">新增</button>
-            </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary" onclick="CreateTag()">新增</button>
+                    </div>
         }
         else
         {
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="UpdateTag()">保存</button>
-            </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary" onclick="UpdateTag()">保存</button>
+                    </div>
         }
     }
 
@@ -44,6 +44,10 @@
     function CreateTag() {
         var tagParameter = {};
         tagParameter.name = $("#name").val();
+        if (!tagParameter.name) {
+            AlertFail("标签名称不能为空");
+            return;
+        }
         $.post({
             url: "/User/CreateTag",
             contentType: "application/json;charset=UTF-8",

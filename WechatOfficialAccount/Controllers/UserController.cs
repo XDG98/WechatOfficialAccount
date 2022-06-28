@@ -233,7 +233,7 @@ namespace WechatOfficialAccount.Controllers
         [Route("/User/DeleteTag")]
         public async Task<Result> DeleteTag([FromBody] TagDetail parameter)
         {
-            Result result = await userService.UpdateTag(new Tag() { tag = parameter });
+            Result result = await userService.DeleteTag(new Tag() { tag = parameter });
             return result;
         }
     }

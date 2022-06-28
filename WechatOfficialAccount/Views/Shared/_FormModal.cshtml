@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="appid" class="form-label">标签Id：</label>
+                        <input type="number" disabled class="form-control" id="id" name="id" autocomplete="off" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="appsecret" class="form-label">标签名称：</label>
+                        <input type="text" class="form-control" id="name" name="name" autocomplete="off" required />
+                        <div class="invalid-feedback">
+                            请输入标签名称
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appsecret" class="form-label">此标签下粉丝数：</label>
+                        <input type="number" disabled class="form-control" id="count" name="count" autocomplete="off" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="Save()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
