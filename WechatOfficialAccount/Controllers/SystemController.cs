@@ -2,12 +2,15 @@
 using WechatOfficialAccount.Helper;
 using WechatOfficialAccount.Models;
 using WechatOfficialAccount.Models.Entity;
+using static WechatOfficialAccount.Models.Result;
 
 namespace WechatOfficialAccount.Controllers
 {
     /// <summary>
     /// 系统管理
     /// </summary>
+    [ApiController]
+    [Route("System")]
     public class SystemController : Controller
     {
         public IActionResult Index()
@@ -27,6 +30,18 @@ namespace WechatOfficialAccount.Controllers
             dataDic.Add("AlertTime", parameter.AlertTime.ToString());
             Result result = await AppSettingsHelper.SaveSystemConfig(dataDic);
             return result;
+        }
+
+        /// <summary>
+        /// 获取枚举项
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/System/GetEnumDescriptionList")]
+        public async Task<Result> GetEnumDescriptionList(string enumName)
+        {
+            List<EnumDto> enumDtoList = EnumHelper.GetEnumDescriptionList(enumName);
+            return new Success(enumDtoList);
         }
 
     }

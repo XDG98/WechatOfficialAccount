@@ -18,5 +18,9 @@
         /// 方法
         /// </summary>
         public string AspAction { get; set; } = "NotFound";
+        /// <summary>
+        /// 是否启用
+        /// </summary>
+        public bool IsEnable { get; set; } = true;
     }
 }

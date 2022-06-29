@@ -134,7 +134,11 @@ namespace WechatOfficialAccount.Services
             }
             return result;
         }
-
+        /// <summary>
+        /// 删除标签
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         public async Task<Result> DeleteTag(Tag parameter)
         {
             string url = $"{WeiXinApi}/tags/delete?access_token={access_token}";

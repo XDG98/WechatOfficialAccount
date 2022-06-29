@@ -1,191 +1,96 @@
-﻿using WechatOfficialAccount.Models;
+﻿using System.ComponentModel;
+using System.Xml;
+using WechatOfficialAccount.Models;
 
 namespace WechatOfficialAccount.Const
 {
     public class WeiXinConst
     {
-        public static Dictionary<int, WeiXinResult> weiXinErrCodeDic = new Dictionary<int, WeiXinResult>()
+        /// <summary>
+        /// 公众号搜索
+        /// </summary>
+        [Description("ADD_SCENE_SEARCH")]
+        public const string ADD_SCENE_SEARCH = "公众号搜索";
+        /// <summary>
+        /// 公众号迁移
+        /// </summary>
+        [Description("ADD_SCENE_ACCOUNT_MIGRATION")]
+        public const string ADD_SCENE_ACCOUNT_MIGRATION = "公众号迁移";
+        /// <summary>
+        /// 名片分享
+        /// </summary>
+        [Description("ADD_SCENE_PROFILE_CARD")]
+        public const string ADD_SCENE_PROFILE_CARD = "名片分享";
+        /// <summary>
+        /// 扫描二维码
+        /// </summary>
+        [Description("ADD_SCENE_QR_CODE")]
+        public const string ADD_SCENE_QR_CODE = "扫描二维码";
+        /// <summary>
+        /// 图文页内名称点击
+        /// </summary>
+        [Description("ADD_SCENE_PROFILE_LINK")]
+        public const string ADD_SCENE_PROFILE_LINK = "图文页内名称点击";
+        /// <summary>
+        /// 图文页右上角菜单
+        /// </summary>
+        [Description("ADD_SCENE_PROFILE_ITEM")]
+        public const string ADD_SCENE_PROFILE_ITEM = "图文页右上角菜单";
+        /// <summary>
+        /// 支付后关注
+        /// </summary>
+        [Description("ADD_SCENE_PAID")]
+        public const string ADD_SCENE_PAID = "支付后关注";
+        /// <summary>
+        /// 微信广告
+        /// </summary>
+        [Description("ADD_SCENE_WECHAT_ADVERTISEMENT")]
+        public const string ADD_SCENE_WECHAT_ADVERTISEMENT = "微信广告";
+        /// <summary>
+        /// 他人转载
+        /// </summary>
+        [Description("ADD_SCENE_REPRINT")]
+        public const string ADD_SCENE_REPRINT = "他人转载";
+        /// <summary>
+        /// 视频号直播
+        /// </summary>
+        [Description("ADD_SCENE_LIVESTREAM")]
+        public const string ADD_SCENE_LIVESTREAM = "视频号直播";
+        /// <summary>
+        /// 视频号
+        /// </summary>
+        [Description("ADD_SCENE_CHANNELS")]
+        public const string ADD_SCENE_CHANNELS = "视频号";
+        /// <summary>
+        /// 其他
+        /// </summary>
+        [Description("ADD_SCENE_OTHERS")]
+        public const string ADD_SCENE_OTHERS = "其他";
+
+        public static Dictionary<int, WeiXinResult> weiXinErrCodeDic = new Dictionary<int, WeiXinResult>();
+        public static void GetWeiXinErrCodeDic()
         {
-            { -1, new WeiXinResult() { errmsg = "系统繁忙，此时请开发者稍候再试" } },
-            { 0, new WeiXinResult() { errmsg = "请求成功"} },
-
-            { 40001, new WeiXinResult() { errmsg = "AppSecret错误或者 AppSecret 不属于这个公众号，请开发者确认 AppSecret 的正确性"} },
-            { 40002, new WeiXinResult() { errmsg = "请确保grant_type字段值为client_credential" } },
-            { 40164, new WeiXinResult() { errmsg = "调用接口的 IP 地址不在白名单中，请在接口 IP 白名单中进行设置。" } },
-            { 45157, new WeiXinResult() { errmsg = "标签名非法，请注意不能和其他标签重名"} },
-            { 45158, new WeiXinResult() { errmsg = "标签名长度超过30个字节"} },
-            { 45056, new WeiXinResult() { errmsg = "创建的标签数过多，请注意不能超过100个"} },
-            { 40009, new WeiXinResult() { errmsg = "图片大小为0或者超过1M" } },
-            { 40097, new WeiXinResult() { errmsg = "参数不正确，请参考字段要求检查json 字段" } },
-            { 40003, new WeiXinResult() { errmsg = "不合法的 OpenID ，请开发者确认 OpenID （该用户）是否已关注公众号，或是否是其他公众号的 OpenID "} },
-            { 40004, new WeiXinResult() { errmsg = "不合法的媒体文件类型" } },
-            { 40005, new WeiXinResult() { errmsg = "不合法的文件类型" } },
-            { 40006, new WeiXinResult() { errmsg = "不合法的文件大小" } },
-            { 40007, new WeiXinResult() { errmsg = "不合法的媒体文件 id" } },
-            { 40008, new WeiXinResult() { errmsg = "不合法的消息类型" } },
-            { 40010, new WeiXinResult() { errmsg = "不合法的语音文件大小" } },
-            { 40011, new WeiXinResult() { errmsg = "不合法的视频文件大小" } },
-            { 40012, new WeiXinResult() { errmsg = "不合法的缩略图文件大小" } },
-            { 40013, new WeiXinResult() { errmsg = "不合法的 AppID ，请开发者检查 AppID 的正确性，避免异常字符，注意大小写 "} },
-            { 40014, new WeiXinResult() { errmsg = "不合法的 access_token ，请开发者认真比对 access_token 的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口 "} },
-            { 40015, new WeiXinResult() { errmsg = "不合法的菜单类型" } },
-            { 40016, new WeiXinResult() { errmsg = "不合法的按钮个数" } },
-            { 40017, new WeiXinResult() { errmsg = "不合法的按钮个数" } },
-            { 40018, new WeiXinResult() { errmsg = "无效的按钮名称大小" } },
-            { 40019, new WeiXinResult() { errmsg = "不合法的按钮 KEY 长度" } },
-            { 40020, new WeiXinResult() { errmsg = "不合法的按钮 URL 长度" } },
-            { 40021, new WeiXinResult() { errmsg = "不合法的菜单版本号" } },
-            { 40022, new WeiXinResult() { errmsg = "不合法的子菜单级数" } },
-            { 40023, new WeiXinResult() { errmsg = "不合法的子菜单按钮个数" } },
-            { 40024, new WeiXinResult() { errmsg = "不合法的子菜单按钮类型" } },
-            { 40025, new WeiXinResult() { errmsg = "不合法的子菜单按钮名字长度" } },
-            { 40026, new WeiXinResult() { errmsg = "不合法的子菜单按钮 KEY 长度" } },
-            { 40027, new WeiXinResult() { errmsg = "不合法的子菜单按钮 URL 长度" } },
-            { 40028, new WeiXinResult() { errmsg = "不合法的自定义菜单使用用户" } },
-            { 40029, new WeiXinResult() { errmsg = "不合法的 oauth_code" } },
-            { 40030, new WeiXinResult() { errmsg = "不合法的 refresh_token" } },
-            { 40031, new WeiXinResult() { errmsg = "不合法的 openid 列表" } },
-            { 40032, new WeiXinResult() { errmsg = "不合法的 openid 列表长度" } },
-            { 40033, new WeiXinResult() { errmsg = "不合法的请求字符，不能包含 \\uxxxx 格式的字符" } },
-            { 40035, new WeiXinResult() { errmsg = "不合法的参数" } },
-            { 40038, new WeiXinResult() { errmsg = "不合法的请求格式" } },
-            { 40039, new WeiXinResult() { errmsg = "不合法的 URL 长度" } },
-            { 40050, new WeiXinResult() { errmsg = "不合法的分组 id" } },
-            { 40051, new WeiXinResult() { errmsg = "分组名字不合法" } },
-            { 40060, new WeiXinResult() { errmsg = "删除单篇图文时，指定的 article_idx 不合法" } },
-            { 40117, new WeiXinResult() { errmsg = "分组名字不合法" } },
-            { 40118, new WeiXinResult() { errmsg = "media_id 大小不合法" } },
-            { 40119, new WeiXinResult() { errmsg = "button 类型错误" } },
-            { 40120, new WeiXinResult() { errmsg = "button 类型错误" } },
-            { 40121, new WeiXinResult() { errmsg = "不合法的 media_id 类型" } },
-            { 40132, new WeiXinResult() { errmsg = "微信号不合法" } },
-            { 40137, new WeiXinResult() { errmsg = "不支持的图片格式" } },
-            { 40155, new WeiXinResult() { errmsg = "请勿添加其他公众号的主页链接" } },
-            { 41001, new WeiXinResult() { errmsg = "缺少 access_token 参数" } },
-            { 41002, new WeiXinResult() { errmsg = "缺少 appid 参数" } },
-            { 41003, new WeiXinResult() { errmsg = "缺少 refresh_token 参数" } },
-            { 41004, new WeiXinResult() { errmsg = "缺少 secret 参数" } },
-            { 41005, new WeiXinResult() { errmsg = "缺少多媒体文件数据" } },
-            { 41006, new WeiXinResult() { errmsg = "缺少 media_id 参数" } },
-            { 41007, new WeiXinResult() { errmsg = "缺少子菜单数据 "} },
-            { 41008, new WeiXinResult() { errmsg = "缺少 oauth code" } },
-            { 41009, new WeiXinResult() { errmsg = "缺少 openid" } },
-            { 42001, new WeiXinResult() { errmsg = "access_token 超时，请检查 access_token 的有效期，请参考基础支持 - 获取 access_token 中，对 access_token 的详细机制说明 "} },
-            { 42002, new WeiXinResult() { errmsg = "refresh_token 超时" } },
-            { 42003, new WeiXinResult() { errmsg = "oauth_code 超时 "} },
-            { 42007, new WeiXinResult() { errmsg = "用户修改微信密码， accesstoken 和 refreshtoken 失效，需要重新授权 "} },
-            { 43001, new WeiXinResult() { errmsg = "需要 GET 请求 "} },
-            { 43002, new WeiXinResult() { errmsg = "需要 POST 请求 "} },
-            { 43003, new WeiXinResult() { errmsg = "需要 HTTPS 请求 "} },
-            { 43004, new WeiXinResult() { errmsg = "需要接收者关注 "} },
-            { 43005, new WeiXinResult() { errmsg = "需要好友关系 "} },
-            { 43019, new WeiXinResult() { errmsg = "需要将接收者从黑名单中移除 "} },
-            { 44001, new WeiXinResult() { errmsg = "多媒体文件为空 "} },
-            { 44002, new WeiXinResult() { errmsg = "POST 的数据包为空 "} },
-            { 44003, new WeiXinResult() { errmsg = "图文消息内容为空 "} },
-            { 44004, new WeiXinResult() { errmsg = "文本消息内容为空 "} },
-            { 45001, new WeiXinResult() { errmsg = "多媒体文件大小超过限制 "} },
-            { 45002, new WeiXinResult() { errmsg = "消息内容超过限制 "} },
-            { 45003, new WeiXinResult() { errmsg = "标题字段超过限制 "} },
-            { 45004, new WeiXinResult() { errmsg = "描述字段超过限制 "} },
-            { 45005, new WeiXinResult() { errmsg = "链接字段超过限制 "} },
-            { 45006, new WeiXinResult() { errmsg = "图片链接字段超过限制 "} },
-            { 45007, new WeiXinResult() { errmsg = "语音播放时间超过限制 "} },
-            { 45008, new WeiXinResult() { errmsg = "图文消息超过限制 "} },
-            { 45009, new WeiXinResult() { errmsg = "接口调用超过限制 "} },
-            { 45010, new WeiXinResult() { errmsg = "创建菜单个数超过限制 "} },
-            { 45011, new WeiXinResult() { errmsg = "API 调用太频繁，请稍候再试 "} },
-            { 45015, new WeiXinResult() { errmsg = "回复时间超过限制 "} },
-            { 45016, new WeiXinResult() { errmsg = "系统分组，不允许修改 "} },
-            { 45017, new WeiXinResult() { errmsg = "分组名字过长 "} },
-            { 45018, new WeiXinResult() { errmsg = "分组数量超过上限 "} },
-            { 45047, new WeiXinResult() { errmsg = "客服接口下行条数超过上限 "} },
-            { 46001, new WeiXinResult() { errmsg = "不存在媒体数据 "} },
-            { 46002, new WeiXinResult() { errmsg = "不存在的菜单版本 "} },
-            { 46003, new WeiXinResult() { errmsg = "不存在的菜单数据 "} },
-            { 46004, new WeiXinResult() { errmsg = "不存在的用户 "} },
-            { 47001, new WeiXinResult() { errmsg = "解析 JSON/XML 内容错误 "} },
-            { 48001, new WeiXinResult() { errmsg = "api 功能未授权，请确认公众号已获得该接口，可以在公众平台官网 - 开发者中心页中查看接口权限 "} },
-            { 48002, new WeiXinResult() { errmsg = "粉丝拒收消息（粉丝在公众号选项中，关闭了 “ 接收消息 ” ） "} },
-            { 48004, new WeiXinResult() { errmsg = "api 接口被封禁，请登录 mp.weixin.qq.com 查看详情 "} },
-            { 48005, new WeiXinResult() { errmsg = "api 禁止删除被自动回复和自定义菜单引用的素材 "} },
-            { 48006, new WeiXinResult() { errmsg = "api 禁止清零调用次数，因为清零次数达到上限 "} },
-            { 48008, new WeiXinResult() { errmsg = "没有该类型消息的发送权限" } },
-
-            { 50001, new WeiXinResult() { errmsg = "用户未授权该 api" } },
-            { 50002, new WeiXinResult() { errmsg = "用户受限，可能是违规后接口被封禁" } },
-            { 50005, new WeiXinResult() { errmsg = "用户未关注公众号" } },
-
-            { 65104, new WeiXinResult() { errmsg = "门店的类型不合法，必须严格按照附表的分类填写" } },
-            { 65105, new WeiXinResult() { errmsg = "图片url 不合法，必须使用接口1 的图片上传接口所获取的url" } },
-            { 65106, new WeiXinResult() { errmsg = "门店状态必须未审核通过" } },
-            { 65107, new WeiXinResult() { errmsg = "扩展字段为不允许修改的状态" } },
-            { 65109, new WeiXinResult() { errmsg = "门店名为空" } },
-            { 65110, new WeiXinResult() { errmsg = "门店所在详细街道地址为空" } },
-            { 65111, new WeiXinResult() { errmsg = "门店的电话为空" } },
-            { 65112, new WeiXinResult() { errmsg = "门店所在的城市为空"} },
-            { 65113, new WeiXinResult() { errmsg = "门店所在的省份为空"} },
-            { 65114, new WeiXinResult() { errmsg = "图片列表为空"} },
-            { 65115, new WeiXinResult() { errmsg = "poi_id 不正确"} },
-            { 61451, new WeiXinResult() { errmsg = "参数错误 (invalid parameter)" } },
-            { 61452, new WeiXinResult() { errmsg = "无效客服账号 (invalid kf_account)" } },
-            { 61453, new WeiXinResult() { errmsg = "客服帐号已存在 (kf_account exsited)" } },
-            { 61454, new WeiXinResult() { errmsg = "客服帐号名长度超过限制 ( 仅允许 10 个英文字符，不包括 @ 及 @ 后的公众号的微信号 )(invalid kf_acount length)" } },
-            { 61455, new WeiXinResult() { errmsg = "客服帐号名包含非法字符 ( 仅允许英文 + 数字 )(illegal character in kf_account)" } },
-            { 61456, new WeiXinResult() { errmsg = "客服帐号个数超过限制 (10 个客服账号 )(kf_account count exceeded)" } },
-            { 61457, new WeiXinResult() { errmsg = "无效头像文件类型 (invalid file type)" } },
-            { 61450, new WeiXinResult() { errmsg = "系统错误 (system error)" } },
-            { 61500, new WeiXinResult() { errmsg = "日期格式错误" } },
-            { 65301, new WeiXinResult() { errmsg = "不存在此 menuid 对应的个性化菜单" } },
-            { 65302, new WeiXinResult() { errmsg = "没有相应的用户" } },
-            { 65303, new WeiXinResult() { errmsg = "没有默认菜单，不能创建个性化菜单" } },
-            { 65304, new WeiXinResult() { errmsg = "MatchRule 信息为空" } },
-            { 65305, new WeiXinResult() { errmsg = "个性化菜单数量受限" } },
-            { 65306, new WeiXinResult() { errmsg = "不支持个性化菜单的帐号" } },
-            { 65307, new WeiXinResult() { errmsg = "个性化菜单信息为空" } },
-            { 65308, new WeiXinResult() { errmsg = "包含没有响应类型的 button" } },
-            { 65309, new WeiXinResult() { errmsg = "个性化菜单开关处于关闭状态" } },
-            { 65310, new WeiXinResult() { errmsg = "填写了省份或城市信息，国家信息不能为空" } },
-            { 65311, new WeiXinResult() { errmsg = "填写了城市信息，省份信息不能为空" } },
-            { 65312, new WeiXinResult() { errmsg = "不合法的国家信息" } },
-            { 65313, new WeiXinResult() { errmsg = "不合法的省份信息" } },
-            { 65314, new WeiXinResult() { errmsg = "不合法的城市信息"  } },
-            { 65316, new WeiXinResult() { errmsg = "该公众号的菜单设置了过多的域名外跳（最多跳转到 3 个域名的链接）" } },
-            { 65317, new WeiXinResult() { errmsg = "不合法的 URL"  } },
-
-            { 89503, new WeiXinResult() { errmsg = "此 IP 调用需要管理员确认,请联系管理员" } },
-            { 89501, new WeiXinResult() { errmsg = "此 IP 正在等待管理员确认,请联系管理员" } },
-            { 89506, new WeiXinResult() { errmsg = "24小时内该 IP 被管理员拒绝调用两次，24小时内不可再使用该 IP 调用" } },
-            { 89507, new WeiXinResult() { errmsg = "1小时内该 IP 被管理员拒绝调用一次，1小时内不可再使用该 IP 调用" } },
-
-            { 9001001, new WeiXinResult() { errmsg = "POST 数据参数不合法" } },
-            { 9001002, new WeiXinResult() { errmsg = "远端服务不可用"  } },
-            { 9001003, new WeiXinResult() { errmsg = "Ticket 不合法" } },
-            { 9001004, new WeiXinResult() { errmsg = "获取摇周边用户信息失败" } },
-            { 9001005, new WeiXinResult() { errmsg = "获取商户信息失败" } },
-            { 9001006, new WeiXinResult() { errmsg = "获取 OpenID 失败" } },
-            { 9001007, new WeiXinResult() { errmsg = "上传文件缺失" } },
-            { 9001008, new WeiXinResult() { errmsg = "上传素材的文件类型不合法" } },
-            { 9001009, new WeiXinResult() { errmsg = "上传素材的文件尺寸不合法" } },
-            { 9001010, new WeiXinResult() { errmsg = "上传失败" } },
-            { 9001020, new WeiXinResult() { errmsg = "帐号不合法" } },
-            { 9001021, new WeiXinResult() { errmsg = "已有设备激活率低于 50% ，不能新增设备" } },
-            { 9001022, new WeiXinResult() { errmsg = "设备申请数不合法，必须为大于 0 的数字" } },
-            { 9001023, new WeiXinResult() { errmsg = "已存在审核中的设备 ID 申请" } },
-            { 9001024, new WeiXinResult() { errmsg = "一次查询设备 ID 数量不能超过 50" } },
-            { 9001025, new WeiXinResult() { errmsg = "设备 ID 不合法" } },
-            { 9001026, new WeiXinResult() { errmsg = "页面 ID 不合法" } },
-            { 9001027, new WeiXinResult() { errmsg = "页面参数不合法" } },
-            { 9001028, new WeiXinResult() { errmsg = "一次删除页面 ID 数量不能超过 10" } },
-            { 9001029, new WeiXinResult() { errmsg = "页面已应用在设备中，请先解除应用关系再删除" } },
-            { 9001030, new WeiXinResult() { errmsg = "一次查询页面 ID 数量不能超过 50" } },
-            { 9001031, new WeiXinResult() { errmsg = "时间区间不合法" } },
-            { 9001032, new WeiXinResult() { errmsg = "保存设备与页面的绑定关系参数错误" } },
-            { 9001033, new WeiXinResult() { errmsg = "门店 ID 不合法" } },
-            { 9001034, new WeiXinResult() { errmsg = "设备备注信息过长" } },
-            { 9001035, new WeiXinResult() { errmsg = "设备申请参数不合法" } },
-            { 9001036, new WeiXinResult() { errmsg = "查询起始值 begin 不合法" } }
-
-        };
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Path.Combine(AppContext.BaseDirectory, "wwwroot\\File\\WeiXinErrCode.xml"));
+            //获取xml根节点
+            XmlNode xmlRoot = xmlDocument.DocumentElement;
+            //读取第一个Row节点
+            XmlNodeList xmlNodeList = xmlRoot.SelectNodes("Row");
+            foreach (var xmlNode in xmlNodeList)
+            {
+                XmlElement xmlElement = (XmlElement)xmlNode;
+                XmlNode errCode = xmlElement.SelectSingleNode("ErrCode");
+                XmlNode englishDescription = xmlElement.SelectSingleNode("EnglishDescription");
+                XmlNode chineseDescription = xmlElement.SelectSingleNode("ChineseDescription");
+                if (!string.IsNullOrEmpty(chineseDescription.InnerText))
+                {
+                    weiXinErrCodeDic.Add(int.Parse(errCode.InnerText), new WeiXinResult { errcode = int.Parse(errCode.InnerText), errmsg = chineseDescription.InnerText });
+                }
+                else
+                {
+                    weiXinErrCodeDic.Add(int.Parse(errCode.InnerText), new WeiXinResult { errcode = int.Parse(errCode.InnerText), errmsg = englishDescription.InnerText });
+                }
+            }
+        }
     }
 }

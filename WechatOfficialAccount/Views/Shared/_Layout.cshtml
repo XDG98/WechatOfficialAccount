@@ -49,19 +49,31 @@
                                     if (navBar.Value.Count == 1 && navBar.Value[0].Name == navBar.Key)
                                     {
                                         <li class="nav-item">
-                                            <a class="nav-link" asp-controller="@navBar.Value[0].AspController" asp-action="@navBar.Value[0].AspAction">@navBar.Key</a>
+                                            @if (@navBar.Value[0].IsEnable)
+                                            {
+                                                <a class="nav-link" asp-controller="@navBar.Value[0].AspController" asp-action="@navBar.Value[0].AspAction">@navBar.Key</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="nav-link disabled" asp-controller="@navBar.Value[0].AspController" asp-action="@navBar.Value[0].AspAction">@navBar.Key</a>
+                                            }
                                         </li>
                                     }
                                     else
                                     {
                                         <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                @navBar.Key
-                                            </a>
+                                            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">@navBar.Key</a>
                                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                                 @foreach (var item in navBar.Value)
                                                 {
-                                                    <li><a class="dropdown-item" asp-controller="@item.AspController" asp-action="@item.AspAction"><i class="bi bi-@item.Icon"></i>&nbsp;&nbsp;@item.Name</a></li>
+                                                    if (@item.IsEnable)
+                                                    {
+                                                        <li><a class="dropdown-item" asp-controller="@item.AspController" asp-action="@item.AspAction"><i class="bi bi-@item.Icon"></i>&nbsp;&nbsp;@item.Name</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a class="dropdown-item disabled" asp-controller="@item.AspController" asp-action="@item.AspAction"><i class="bi bi-@item.Icon"></i>&nbsp;&nbsp;@item.Name</a></li>
+                                                    }
                                                 }
                                             </ul>
                                         </li>
@@ -78,42 +90,58 @@
         </nav>
     </header>
 
-    <div class="container">
-        @*提示框占位*@
-        <div id="MyAlert" role="alert" style="display: none;">
-            <i></i>
-            <label></label>
-            <button type="button" class="btn-close" onclick="$('#MyAlert').hide();" aria-label="Close"></button>
+    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            @*模态窗提示框占位*@
+            <div id="MyModalAlert" role="alert" style="display: none;">
+                <i></i>&nbsp;
+                <label></label>
+                <button type="button" class="btn-close" onclick="$('#MyModalAlert').hide();" aria-label="Close"></button>
+            </div>
+            <div class="modal-content">
+                <a hidden id="url"></a>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="appid" class="form-label">标签Id：</label>
+                            <input type="number" class="form-control" id="id" name="id" autocomplete="off" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label for="appsecret" class="form-label">标签名称：</label>
+                            <input type="text" class="form-control" id="name" name="name" autocomplete="off" required />
+                            <div class="invalid-feedback">
+                                请输入标签名称
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appsecret" class="form-label">此标签下粉丝数：</label>
+                            <input type="number" class="form-control" id="count" name="count" autocomplete="off" readonly />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="Save()">保存</button>
+                </div>
+            </div>
         </div>
-        @*<div id="MyAlert" class="alert alert-info alert-dismissible fade show" role="alert">
-        <i class="bi bi-info-circle-fill"></i>
-        <label></label>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>*@
+    </div>
+
+    <div class="container">
+        @*@*提示框占位*@
+        <div id="MyDefaultAlertAlert" role="alert" style="display: none; z-index: 99;">
+            <i></i>&nbsp;
+            <label></label>
+            <button type="button" class="btn-close" onclick="$('#MyDefaultAlertAlert').hide();" aria-label="Close"></button>
+        </div>
 
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
-
-        @*分页控件*@
-        @*<nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-        <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        </a>
-        </li>
-        @for (int i = 0; i < 200; i++)
-        {
-        <li class="page-item"><a class="page-link" href="#">@i</a></li>
-        }
-        <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        </a>
-        </li>
-        </ul>
-        </nav>*@
 
         @*推送通知*@
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
@@ -130,41 +158,10 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="Toast()">Show live toast</button>
-    </div>
-
-    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="appid" class="form-label">标签Id：</label>
-                            <input type="number" disabled class="form-control" id="id" name="id" autocomplete="off" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="appsecret" class="form-label">标签名称：</label>
-                            <input type="text" class="form-control" id="name" name="name" autocomplete="off" required />
-                            <div class="invalid-feedback">
-                                请输入标签名称
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appsecret" class="form-label">此标签下粉丝数：</label>
-                            <input type="number" disabled class="form-control" id="count" name="count" autocomplete="off" />
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
+        <button type="button" class="btn btn-primary" onclick="Toast()">推送通知</button>
+        <button type="button" class="btn btn-info" onclick="AlertSuccess(AlertChoose.DefaultAlert, '成功提示！')">成功提示</button>
+        <button type="button" class="btn btn-warning" onclick="AlertFail(AlertChoose.DefaultAlert, '失败提示！')">失败提示</button>
+        <button type="button" class="btn btn-danger" onclick="AlertError(AlertChoose.DefaultAlert, '错误提示！')">错误提示</button>
     </div>
 
     <footer class="border-top footer text-center">
@@ -201,6 +198,7 @@
         myModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget;
             // Extract info from data-bs-* attributes
+            var url = button.getAttribute('data-bs-url');
             var id = button.getAttribute('data-bs-id');
             var name = button.getAttribute('data-bs-name');
             var count = button.getAttribute('data-bs-count');
@@ -208,19 +206,37 @@
             // and then do the updating in a callback.
             //
             // Update the modal's content.
-            var modalTitle = myModal.querySelector('.modal-title');
-            var modalBodyId = myModal.querySelector('.modal-body input[id="id"]');
-            var modalBodyName = myModal.querySelector('.modal-body input[id="name"]');
-            var modalBodyCount = myModal.querySelector('.modal-body input[id="count"]');
+            var modalContentUrl = $('.modal-content a[id="url"]');
+            var modalBodyForm = $('.modal-body form');
+            var modalTitle = $('.modal-title');
+            var modalBodyId = $('.modal-body input[id="id"]');
+            var modalBodyName = $('.modal-body input[id="name"]');
+            var modalBodyCount = $('.modal-body input[id="count"]');
 
+            console.log({ "modalBodyForm": modalBodyForm });
+            modalContentUrl.value = url;
             modalTitle.textContent = '编辑';
             modalBodyId.value = id;
             modalBodyName.value = name;
             modalBodyCount.value = count;
         })
 
-        function Save(fun) {
-            console.log({ "fun": fun });
+        /**
+         * 模态窗保存
+         */
+        function Save() {
+            var url = $("#url").val();
+            var id = $("#id").val();
+            var name = $("#name").val();
+            var parameter = { "id": id, "name": name };
+            $.post({
+                url: url,
+                contentType: "application/json;charset=UTF-8",
+                data: JSON.stringify(parameter),
+                success: function(res) {
+                    DefaultAlert(res);
+                }
+            })
         }
 
         //#region 提示框
@@ -268,6 +284,9 @@
                 toast.show();
             })
         }
+        /**
+         * 推送通知
+         */
         function Toast() {
             var myToast = $('#MyToast');
             var toastBody = myToast.find("div[class=toast-body]");
@@ -277,60 +296,86 @@
         }
         //#endregion
 
-        let toastsArray = ["info", "success", "warning", "danger"];
-        let iconArray = ["info-circle-fill", "check-circle-fill", "exclamation-circle-fill", "exclamation-triangle-fill"];
+        /**
+         * 默认提示
+         * res：响应结果
+         */
+        function DefaultAlert(res) {
+            switch (res.code) {
+                case @HttpStatusCode.OK.GetHashCode():
+                    AlertSuccess(AlertChoose.DefaultAlert, "操作成功！");
+                    break;
+                case @HttpStatusCode.BadRequest.GetHashCode():
+                    AlertFail(AlertChoose.DefaultAlert, res.message);
+                    break;
+                case @HttpStatusCode.InternalServerError.GetHashCode():
+                    AlertError(AlertChoose.DefaultAlert, res.message);
+                    break;
+            }
+        }
+
+        /**
+         * 模态窗提示
+         * res：响应结果
+         */
+        function ModalAlert(res) {
+            switch (res.code) {
+                case @HttpStatusCode.OK.GetHashCode():
+                    AlertSuccess(AlertChoose.ModalAlert, "操作成功！");
+                    break;
+                case @HttpStatusCode.BadRequest.GetHashCode():
+                    AlertFail(AlertChoose.ModalAlert, res.message);
+                    break;
+                case @HttpStatusCode.InternalServerError.GetHashCode():
+                    AlertError(AlertChoose.ModalAlert, res.message);
+                    break;
+            }
+        }
 
         /**
          * 成功提示
+         * type: 提示选择 AlertChoose.DefaultAlert 默认提示，AlertChoose.ModalAlert 模态窗内提示
          * content：提示内容
          */
-        function AlertSuccess(content) {
-            DefinedAlert(AlertType.Success, AlertIcon.Success, content);
+        function AlertSuccess(alertChoose, content) {
+            DefinedAlert(alertChoose, AlertType.Success, AlertIcon.Success, content);
         }
         /**
          * 失败提示
          * content：提示内容
          */
-        function AlertFail(content) {
-            DefinedAlert(AlertType.Warning, AlertIcon.Warning, content);
+        function AlertFail(alertChoose, content) {
+            DefinedAlert(alertChoose, AlertType.Warning, AlertIcon.Warning, content);
         }
         /**
          * 错误提示
          * content：提示内容
          */
-        function AlertError(content) {
-            DefinedAlert(AlertType.Danger, AlertIcon.Danger, content);
+        function AlertError(alertChoose, content) {
+            DefinedAlert(alertChoose, AlertType.Danger, AlertIcon.Danger, content);
         }
+
         /**
          * 自定义提示
-         * code：响应状态码
+         * type: 1.默认提示，2.模态窗提示
+         * alertType：提示类型
+         * alertIcon：提示图标
          * content：提示内容
          */
-        function Alert(res) {
-            switch (res.code) {
-                case @HttpStatusCode.OK.GetHashCode():
-                    AlertSuccess("操作成功！");
+        function DefinedAlert(alertChoose, alertType, alertIcon, content) {
+            var myAlert;
+            switch (alertChoose) {
+                case AlertChoose.DefaultAlert:
+                    myAlert = $('#MyDefaultAlertAlert');
                     break;
-                case @HttpStatusCode.BadRequest.GetHashCode():
-                    AlertFail(res.message);
-                    break;
-                case @HttpStatusCode.InternalServerError.GetHashCode():
-                    AlertError(res.message);
+                case AlertChoose.ModalAlert:
+                    myAlert = $('#MyModalAlert');
                     break;
             }
-        }
-        /**
-         * 自定义提示
-         * type：提示类型
-         * icon：提示图标
-         * content：提示内容
-         */
-        function DefinedAlert(type, icon, content) {
-            var myAlert = $('#MyAlert');
-            myAlert.addClass("alert alert-" + type + " alert-dismissible fade show");
+            myAlert.addClass("alert alert-" + alertType + " alert-dismissible fade show");
 
             var myAlertIcon = myAlert.find("i");
-            myAlertIcon.addClass("bi bi-" + icon);
+            myAlertIcon.addClass("bi bi-" + alertIcon);
             var myAlertContent = myAlert.find("label");
             myAlertContent.html(content);
 
@@ -345,13 +390,68 @@
         }
 
         /**
-         * 获取随机数
-         * min：最小随机数
-         * max：最大随机数
+         * 获取枚举描述
          */
-        function generateRandomInteger(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+        //function GetGridEnumDescription(cellvalue, enumName) {
+        //    var enumList;
+        //    async() = {
+        //        enumList = await GetEnumDescriptionList(enumName);
+        //    }
+        //    //var enumList = await GetEnumDescriptionList(enumName);
+        //    if (!enumList) {
+        //        return cellvalue;
+        //    }
+        //    enumList.forEach(function(element) {
+        //        if (cellvalue == element.value) {
+        //            return element.description;
+        //        }
+        //    })
+        //}
+
+        const GetGridEnumDescription = async (cellvalue, enumName) => {
+            var enumList = await GetEnumDescriptionList(enumName);
+            console.log({ "enumList": enumList });
+            if (!enumList) {
+                return cellvalue;
+            }
+            enumList.forEach(function(element) {
+                if (cellvalue == element.value) {
+                    console.log({ "element.description": element.description });
+                    return "'" + element.description + "'";
+                }
+            })
         }
+
+        const GetEnumDescriptionList = async (enumName) => {
+            return new Promise((resolve, reject) => {
+                $.get({
+                    url: "/System/GetEnumDescriptionList",
+                    data: { "enumName": enumName },
+                    success: function(res) {
+                        if (res.code == @HttpStatusCode.OK.GetHashCode()) {
+                            resolve(res.data);
+                        } else {
+                            reject(res);
+                        }
+                    }
+                })
+            })
+        }
+
+        /**
+         * 获取枚举项
+         */
+        //function GetEnumDescriptionList(enumName) {
+        //    $.get({
+        //        url: "/System/GetEnumDescriptionList",
+        //        data: { "enumName": enumName },
+        //        success: function(res) {
+        //            if (res.code == @HttpStatusCode.OK.GetHashCode()) {
+        //                return res.data;
+        //            }
+        //        }
+        //    })
+        //}
 
         /**
          * 提示类型
@@ -370,6 +470,19 @@
             Success: "check-circle-fill",
             Warning: "exclamation-circle-fill",
             Danger: "exclamation-triangle-fill",
+        }
+        /**
+         * 提示选择
+         */
+        const AlertChoose = {
+            /**
+             * 默认提示
+             */
+            DefaultAlert: 1,
+            /**
+             * 模态窗内提示，该提示适应模态窗，仅展示于模态窗之内
+             */
+            ModalAlert: 2,
         }
 
     </script>

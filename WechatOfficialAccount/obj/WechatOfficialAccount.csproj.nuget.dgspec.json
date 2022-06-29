@@ -1,21 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "F:\\C#\\My\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj": {}
+    "E:\\Project\\XDG98\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj": {}
   },
   "projects": {
-    "F:\\C#\\My\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj": {
+    "E:\\Project\\XDG98\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\C#\\My\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj",
+        "projectUniqueName": "E:\\Project\\XDG98\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj",
         "projectName": "WechatOfficialAccount",
-        "projectPath": "F:\\C#\\My\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj",
-        "packagesPath": "C:\\Users\\98033\\.nuget\\packages\\",
-        "outputPath": "F:\\C#\\My\\WechatOfficialAccount\\WechatOfficialAccount\\obj\\",
+        "projectPath": "E:\\Project\\XDG98\\WechatOfficialAccount\\WechatOfficialAccount\\WechatOfficialAccount.csproj",
+        "packagesPath": "C:\\Users\\JUQENT\\.nuget\\packages\\",
+        "outputPath": "E:\\Project\\XDG98\\WechatOfficialAccount\\WechatOfficialAccount\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "C:\\Users\\98033\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\JUQENT\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -43,6 +49,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.1, )"
+            },
+            "System.Xml.XmlDocument": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [

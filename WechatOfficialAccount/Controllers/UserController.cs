@@ -28,8 +28,13 @@ namespace WechatOfficialAccount.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<GetUserInfoDto> getUserInfoDtoList = new List<GetUserInfoDto>();
+            ViewData["GetUserInfoDtoList"] = GetGetUserInfoDtoList();
+            return View();
+        }
 
+        public async Task<List<GetUserInfoDto>> GetGetUserInfoDtoList()
+        {
+            List<GetUserInfoDto> getUserInfoDtoList = new List<GetUserInfoDto>();
             Result result = await GetUserList();
             if (result.Code == HttpStatusCode.OK)
             {
@@ -44,15 +49,31 @@ namespace WechatOfficialAccount.Controllers
                         getUserInfoDtoList.Add(getUserInfoDto);
                     }
                 }
-                ViewData["GetUserInfoDtoList"] = getUserInfoDtoList;
-                return View();
             }
-            else
-            {
-                return Content(JsonConvert.SerializeObject(result));
-            }
+            return getUserInfoDtoList;
         }
 
+        #region 用户
+        /// <summary>
+        /// 用户列表页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/UserPage")]
+        public async Task<IActionResult> UserPage()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 新增、编辑标签页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/UserForm")]
+        public async Task<IActionResult> UserForm()
+        {
+            return View();
+        }
         /// <summary>
         /// 获取用户列表
         /// </summary>
@@ -69,7 +90,6 @@ namespace WechatOfficialAccount.Controllers
             }
             return result;
         }
-
         /// <summary>
         /// 获取用户基本信息
         /// </summary>
@@ -87,7 +107,6 @@ namespace WechatOfficialAccount.Controllers
             }
             return result;
         }
-
         /// <summary>
         /// 批量获取用户基本信息
         /// </summary>
@@ -105,7 +124,34 @@ namespace WechatOfficialAccount.Controllers
             }
             return result;
         }
-
+        /// <summary>
+        /// 批量获取用户基本信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/User/BatchGetUserInfoList")]
+        public async Task<object> BatchGetUserInfoList([FromQuery] SearchParameter parameter)
+        {
+            Result result = await userService.GetUserTagList();
+            if (result.Code == HttpStatusCode.OK)
+            {
+                SearchDto searchDto = new SearchDto();
+                List<GetUserInfoDto> getUserInfoDtoList = await GetGetUserInfoDtoList();
+                searchDto.total = getUserInfoDtoList.Count;
+                if (!string.IsNullOrEmpty(parameter.search))
+                {
+                    getUserInfoDtoList = getUserInfoDtoList.Where(item => item.openid.ToString().Contains(parameter.search) || item.nickname.Contains(parameter.search)).ToList();
+                }
+                //if (searchParameter.sort != "sequence")
+                //{
+                //    getUserTagListDto.tags = getUserTagListDto.tags.OrderByDescending(item => item.id).ToList();
+                //}
+                searchDto.rows = getUserInfoDtoList.Skip(parameter.offset).Take(parameter.limit).ToList();
+                return searchDto;
+            }
+            return result;
+        }
         /// <summary>
         /// 设置用户备注名
         /// </summary>
@@ -119,7 +165,9 @@ namespace WechatOfficialAccount.Controllers
             parameter.remark = "123";
             return await userService.UpdateRemark(parameter);
         }
+        #endregion
 
+        #region 用户标签
         /// <summary>
         /// 公众号已创建的标签列表页面
         /// </summary>
@@ -193,7 +241,7 @@ namespace WechatOfficialAccount.Controllers
                 searchDto.rows = getUserTagListDto.tags.Skip(parameter.offset).Take(parameter.limit).ToList();
                 return searchDto;
             }
-            return null;
+            return result;
         }
         /// <summary>
         /// 创建标签
@@ -236,5 +284,7 @@ namespace WechatOfficialAccount.Controllers
             Result result = await userService.DeleteTag(new Tag() { tag = parameter });
             return result;
         }
+        #endregion
+
     }
 }

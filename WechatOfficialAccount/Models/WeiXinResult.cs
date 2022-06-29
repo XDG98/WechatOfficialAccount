@@ -23,14 +23,19 @@ namespace WechatOfficialAccount.Models
         /// <returns></returns>
         public static string GetMessage(WeiXinResult weiXinResult)
         {
+            if (WeiXinConst.weiXinErrCodeDic.Count == 0)
+            {
+                WeiXinConst.GetWeiXinErrCodeDic();
+            }
             if (WeiXinConst.weiXinErrCodeDic.ContainsKey(weiXinResult.errcode))
             {
-                return WeiXinConst.weiXinErrCodeDic[weiXinResult.errcode].errmsg;
+                string errmsg = WeiXinConst.weiXinErrCodeDic[weiXinResult.errcode].errmsg;
+                if (!string.IsNullOrEmpty(errmsg))
+                {
+                    return $"{weiXinResult.errcode}：{errmsg}";
+                }
             }
-            else
-            {
-                return weiXinResult.errmsg;
-            }
+            return $"{weiXinResult.errcode}：{weiXinResult.errmsg}";
         }
     }
 

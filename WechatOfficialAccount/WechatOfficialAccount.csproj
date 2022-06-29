@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\favicon.ico" />
+    <Content Remove="wwwroot\WeiXinErrCode.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1716,6 +1722,14 @@
     <None Include="wwwroot\lib\bootstrap-5.1.3-dist\js\bootstrap.min.js.map" />
     <None Include="wwwroot\lib\bootstrap-table\bootstrap-table-locale-all.js" />
     <None Include="wwwroot\lib\bootstrap-table\bootstrap-table.min.js" />
+    <None Include="wwwroot\File\WeiXinErrCode.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\favicon.ico" />
+    <Resource Include="wwwroot\WeiXinErrCode.xml" />
   </ItemGroup>
 
 </Project>
