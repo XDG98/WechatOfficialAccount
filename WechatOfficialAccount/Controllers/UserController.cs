@@ -21,39 +21,33 @@ namespace WechatOfficialAccount.Controllers
     public class UserController : MvcControllerBase
     {
         private IUserService userService;
+        private static UserDBService userDBService;
         public UserController()
         {
             userService = new UserService();
+            userDBService = new UserDBService();
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewData["GetUserInfoDtoList"] = GetGetUserInfoDtoList();
+            ViewData["GetUserInfoDtoList"] = GetAllUserInfoDtoList();
             return View();
         }
 
-        public async Task<List<GetUserInfoDto>> GetGetUserInfoDtoList()
+        /// <summary>
+        /// 获取所有用户信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<GetUserInfoDto>> GetAllUserInfoDtoList()
         {
-            List<GetUserInfoDto> getUserInfoDtoList = new List<GetUserInfoDto>();
-            Result result = await GetUserList();
+            Result result = await userService.GetAllUserInfoDtoList();
             if (result.Code == HttpStatusCode.OK)
             {
-                GetUserListDto getUserListDto = (GetUserListDto)result.Data;
-                //await userService.BatchGetUserInfo(getUserListDto.data.openid);
-                foreach (var item in getUserListDto.data.openid)
-                {
-                    result = await userService.GetUserInfo(item);
-                    if (result.Code == HttpStatusCode.OK)
-                    {
-                        GetUserInfoDto getUserInfoDto = (GetUserInfoDto)result.Data;
-                        getUserInfoDtoList.Add(getUserInfoDto);
-                    }
-                }
+                return (List<GetUserInfoDto>)result.Data;
             }
-            return getUserInfoDtoList;
+            return new List<GetUserInfoDto>();
         }
 
-        #region 用户
         /// <summary>
         /// 用户列表页面
         /// </summary>
@@ -64,6 +58,7 @@ namespace WechatOfficialAccount.Controllers
         {
             return View();
         }
+
         /// <summary>
         /// 新增、编辑标签页面
         /// </summary>
@@ -74,6 +69,7 @@ namespace WechatOfficialAccount.Controllers
         {
             return View();
         }
+
         /// <summary>
         /// 获取用户列表
         /// </summary>
@@ -90,6 +86,7 @@ namespace WechatOfficialAccount.Controllers
             }
             return result;
         }
+
         /// <summary>
         /// 获取用户基本信息
         /// </summary>
@@ -107,6 +104,7 @@ namespace WechatOfficialAccount.Controllers
             }
             return result;
         }
+
         /// <summary>
         /// 批量获取用户基本信息
         /// </summary>
@@ -124,6 +122,7 @@ namespace WechatOfficialAccount.Controllers
             }
             return result;
         }
+
         /// <summary>
         /// 批量获取用户基本信息
         /// </summary>
@@ -131,27 +130,11 @@ namespace WechatOfficialAccount.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("/User/BatchGetUserInfoList")]
-        public async Task<object> BatchGetUserInfoList([FromQuery] SearchParameter parameter)
+        public async Task<SearchDto> BatchGetUserInfoList([FromQuery] SearchParameter parameter)
         {
-            Result result = await userService.GetUserTagList();
-            if (result.Code == HttpStatusCode.OK)
-            {
-                SearchDto searchDto = new SearchDto();
-                List<GetUserInfoDto> getUserInfoDtoList = await GetGetUserInfoDtoList();
-                searchDto.total = getUserInfoDtoList.Count;
-                if (!string.IsNullOrEmpty(parameter.search))
-                {
-                    getUserInfoDtoList = getUserInfoDtoList.Where(item => item.openid.ToString().Contains(parameter.search) || item.nickname.Contains(parameter.search)).ToList();
-                }
-                //if (searchParameter.sort != "sequence")
-                //{
-                //    getUserTagListDto.tags = getUserTagListDto.tags.OrderByDescending(item => item.id).ToList();
-                //}
-                searchDto.rows = getUserInfoDtoList.Skip(parameter.offset).Take(parameter.limit).ToList();
-                return searchDto;
-            }
-            return result;
+            return await userDBService.QueryPage(parameter);
         }
+
         /// <summary>
         /// 设置用户备注名
         /// </summary>
@@ -165,126 +148,6 @@ namespace WechatOfficialAccount.Controllers
             parameter.remark = "123";
             return await userService.UpdateRemark(parameter);
         }
-        #endregion
-
-        #region 用户标签
-        /// <summary>
-        /// 公众号已创建的标签列表页面
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("/User/UserTagPage")]
-        public async Task<IActionResult> UserTagPage()
-        {
-            return View();
-        }
-        /// <summary>
-        /// 新增、编辑标签页面
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("/User/UserTagForm/{id?}")]
-        public async Task<IActionResult> UserTagForm(string? id)
-        {
-            if (!string.IsNullOrEmpty(id))
-            {
-                Tag tag = new Tag();
-                SearchDto searchDto = await GetUserTagDtoList(new SearchParameter() { search = id }) as SearchDto;
-                List<TagDetail> tagDetailList = searchDto.rows as List<TagDetail>;
-                tag.tag = tagDetailList[0];
-                ViewData["Tag"] = tag.tag;
-            }
-
-            return View();
-        }
-        /// <summary>
-        /// 获取公众号已创建的标签列表
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("/User/GetUserTagList")]
-        public async Task<Result> GetUserTagList()
-        {
-            Result result = await userService.GetUserTagList();
-            if (result.Code == HttpStatusCode.OK)
-            {
-                GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
-                return new Success(getUserTagListDto);
-            }
-            return result;
-        }
-        /// <summary>
-        /// 获取公众号已创建的标签列表
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("/User/GetUserTagDtoList")]
-        public async Task<object> GetUserTagDtoList([FromQuery] SearchParameter parameter)
-        {
-            Result result = await userService.GetUserTagList();
-            if (result.Code == HttpStatusCode.OK)
-            {
-                GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
-
-                if (!string.IsNullOrEmpty(parameter.search))
-                {
-                    getUserTagListDto.tags = getUserTagListDto.tags.Where(item => item.id.ToString().Contains(parameter.search) || item.name.Contains(parameter.search)).ToList();
-                }
-                //if (searchParameter.sort != "sequence")
-                //{
-                //    getUserTagListDto.tags = getUserTagListDto.tags.OrderByDescending(item => item.id).ToList();
-                //}
-                SearchDto searchDto = new SearchDto();
-                searchDto.total = getUserTagListDto.tags.Count;
-                searchDto.rows = getUserTagListDto.tags.Skip(parameter.offset).Take(parameter.limit).ToList();
-                return searchDto;
-            }
-            return result;
-        }
-        /// <summary>
-        /// 创建标签
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("/User/CreateTag")]
-        public async Task<Result> CreateTag([FromBody] TagParameter parameter)
-        {
-            Result result = await userService.CreateTag(new CreateTagParameter() { tag = parameter });
-            if (result.Code == HttpStatusCode.OK)
-            {
-                GetUserTagListDto getUserTagListDto = (GetUserTagListDto)result.Data;
-                return new Success(getUserTagListDto);
-            }
-            return result;
-        }
-        /// <summary>
-        /// 编辑标签
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("/User/UpdateTag")]
-        public async Task<Result> UpdateTag([FromBody] TagDetail parameter)
-        {
-            Result result = await userService.UpdateTag(new Tag() { tag = parameter });
-            return result;
-        }
-        /// <summary>
-        /// 删除标签
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("/User/DeleteTag")]
-        public async Task<Result> DeleteTag([FromBody] TagDetail parameter)
-        {
-            Result result = await userService.DeleteTag(new Tag() { tag = parameter });
-            return result;
-        }
-        #endregion
 
     }
 }

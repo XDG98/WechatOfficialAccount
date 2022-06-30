@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SqlSugar;
 using System.Net;
 using WechatOfficialAccount.Controllers;
 using WechatOfficialAccount.Helper;
@@ -50,6 +51,31 @@ namespace WechatOfficialAccount.Services
         }
 
         /// <summary>
+        /// 获取所有用户信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result> GetAllUserInfoDtoList()
+        {
+            List<GetUserInfoDto> getUserInfoDtoList = new List<GetUserInfoDto>();
+            Result result = await GetUserList();
+            if (result.Code == HttpStatusCode.OK)
+            {
+                GetUserListDto getUserListDto = (GetUserListDto)result.Data;
+                foreach (var item in getUserListDto.data.openid)
+                {
+                    result = await GetUserInfo(item);
+                    if (result.Code == HttpStatusCode.OK)
+                    {
+                        GetUserInfoDto getUserInfoDto = (GetUserInfoDto)result.Data;
+                        getUserInfoDtoList.Add(getUserInfoDto);
+                    }
+                }
+                return new Success(getUserInfoDtoList);
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 批量获取用户基本信息
         /// </summary>
         /// <param name="openidList"></param>
@@ -87,68 +113,5 @@ namespace WechatOfficialAccount.Services
             return result;
         }
 
-
-        /// <summary>
-        /// 获取公众号已创建的标签列表
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result> GetUserTagList()
-        {
-            string url = $"{WeiXinApi}/tags/get?access_token={access_token}";
-            Result result = await HttpClienttHelper.WeiXinGet(url);
-            if (result.Code == HttpStatusCode.OK)
-            {
-                GetUserTagListDto getUserTagListDto = JsonConvert.DeserializeObject<GetUserTagListDto>(result.Data.ToString());
-                result = new Success(getUserTagListDto);
-            }
-            return result;
-        }
-        /// <summary>
-        /// 创建标签
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result> CreateTag(CreateTagParameter parameter)
-        {
-            string url = $"{WeiXinApi}/tags/create?access_token={access_token}";
-            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
-            if (result.Code == HttpStatusCode.OK)
-            {
-                GetUserTagListDto getUserTagListDto = JsonConvert.DeserializeObject<GetUserTagListDto>(result.Data.ToString());
-                result = new Success(getUserTagListDto);
-            }
-            return result;
-        }
-        /// <summary>
-        /// 编辑标签
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public async Task<Result> UpdateTag(Tag parameter)
-        {
-            string url = $"{WeiXinApi}/tags/update?access_token={access_token}";
-            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
-            if (result.Code == HttpStatusCode.OK)
-            {
-                WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(result.Data.ToString());
-                result = new Success(weiXinResult);
-            }
-            return result;
-        }
-        /// <summary>
-        /// 删除标签
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public async Task<Result> DeleteTag(Tag parameter)
-        {
-            string url = $"{WeiXinApi}/tags/delete?access_token={access_token}";
-            Result result = await HttpClienttHelper.WeiXinPost(url, parameter);
-            if (result.Code == HttpStatusCode.OK)
-            {
-                WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(result.Data.ToString());
-                result = new Success(weiXinResult);
-            }
-            return result;
-        }
     }
 }

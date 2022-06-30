@@ -85,6 +85,7 @@
                             <a class="nav-link disabled">更多新功能玩命开发中...</a>
                         </li>
                     </ul>
+                    <div id="he-plugin-simple"></div>
                 </div>
             </div>
         </nav>
@@ -133,7 +134,7 @@
 
     <div class="container">
         @*@*提示框占位*@
-        <div id="MyDefaultAlertAlert" role="alert" style="display: none; z-index: 99;">
+        <div id="MyDefaultAlertAlert" role="alert" style="display: none;">
             <i></i>&nbsp;
             <label></label>
             <button type="button" class="btn-close" onclick="$('#MyDefaultAlertAlert').hide();" aria-label="Close"></button>
@@ -144,10 +145,10 @@
         </main>
 
         @*推送通知*@
-        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="position-fixed bottom-0 end-0 p-3">
             <div id="MyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
-                    <img src="@AppSettingsHelper.GetAppSettings("ImgUrl")" width="66" class="rounded me-2" alt="...">
+                    <img src="@AppSettingsHelper.GetSystemConfig("ImgUrl")" width="66" class="rounded me-2" alt="...">
                     <strong class="me-auto">系统消息</strong>
                     <small>@DateTime.Now</small>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -193,8 +194,32 @@
     <script src="~/lib/bootstrap-table/locale/bootstrap-table-en-US.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>
     <script>
-        var myModal = document.getElementById('MyModal');
+        WIDGET = {
+            "CONFIG": {
+                "modules": "01234",
+                "background": "1",
+                "tmpColor": "FFFFFF",
+                "tmpSize": "16",
+                "cityColor": "FFFFFF",
+                "citySize": "16",
+                "aqiColor": "FFFFFF",
+                "aqiSize": "16",
+                "weatherIconSize": "24",
+                "alertIconSize": "18",
+                "padding": "10px 10px 10px 10px",
+                "shadow": "0",
+                "language": "auto",
+                "borderRadius": "5",
+                "fixed": "false",
+                "vertical": "top",
+                "horizontal": "left",
+                "key": "4afdf019eb9b4b7098624e6b9167481e"
+            }
+        }
+
+        var myModal = $('#MyModal')[0];
         myModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget;
             // Extract info from data-bs-* attributes
@@ -206,14 +231,13 @@
             // and then do the updating in a callback.
             //
             // Update the modal's content.
-            var modalContentUrl = $('.modal-content a[id="url"]');
-            var modalBodyForm = $('.modal-body form');
-            var modalTitle = $('.modal-title');
-            var modalBodyId = $('.modal-body input[id="id"]');
-            var modalBodyName = $('.modal-body input[id="name"]');
-            var modalBodyCount = $('.modal-body input[id="count"]');
+            var modalContentUrl = $('.modal-content a[id="url"]')[0];
+            var modalBodyForm = $('.modal-body form')[0];
+            var modalTitle = $('.modal-title')[0];
+            var modalBodyId = $('.modal-body input[id="id"]')[0];
+            var modalBodyName = $('.modal-body input[id="name"]')[0];
+            var modalBodyCount = $('.modal-body input[id="count"]')[0];
 
-            console.log({ "modalBodyForm": modalBodyForm });
             modalContentUrl.value = url;
             modalTitle.textContent = '编辑';
             modalBodyId.value = id;
@@ -234,46 +258,10 @@
                 contentType: "application/json;charset=UTF-8",
                 data: JSON.stringify(parameter),
                 success: function(res) {
-                    DefaultAlert(res);
+                    ModalAlert(res);
                 }
             })
         }
-
-        //#region 提示框
-        //var alertPlaceholder = document.getElementById('liveAlertPlaceholder');
-        //var alertTrigger = document.getElementById('liveAlertBtn');
-        //if (alertTrigger) {
-        //    alertTrigger.addEventListener('click', function() {
-        //        let toastsArray = ["info", "success", "warning", "danger"];
-        //        let iconArray = ["info-circle-fill", "check-circle-fill", "exclamation-circle-fill", "exclamation-triangle-fill"];
-        //        let number = generateRandomInteger(0, 3);
-        //        alert('这是一个提示框！', toastsArray[number], iconArray[number]);
-        //    })
-        //}
-
-        //function alert(message, type, icon) {
-        //    var wrapper = document.createElement('div');
-        //    wrapper.innerHTML = '<div id="myAlert" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
-        //        '<i class="bi bi-' + icon + '"></i>&nbsp;&nbsp;' + message +
-        //        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-        //        '</div>';
-
-        //    alertPlaceholder.append(wrapper);
-
-        //    //设置显示指定秒后移除
-        //    setTimeout(function() {
-        //        var alertNode = document.querySelector('.alert');
-        //        var alert = bootstrap.Alert.getInstance(alertNode);
-        //        console.log({ "alertNode": alertNode, "alert": alert });
-        //        alert.closed();
-        //    }, 2000);
-        //}
-
-        //var myAlert = document.getElementById('myAlert');
-        //myAlert.addEventListener('closed.bs.alert', function() {
-        //    console.log("提示框关闭");
-        //});
-        //#endregion
 
         //#region 推送通知
         var toastTrigger = document.getElementById('liveToastBtn');
@@ -390,6 +378,26 @@
         }
 
         /**
+         * 时间戳转时间
+         * timestamp：时间戳
+         */
+        function TimestampToTime(timestamp) {
+            timestamp = timestamp.toString();
+            if (timestamp.length <= 10) {
+                timestamp = timestamp * 1000;
+            }
+            var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            var D = date.getDate() + ' ';
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds() + '.';
+            var ms = date.getMilliseconds();
+            return Y + M + D + h + m + s + ms;
+        }
+
+        /**
          * 获取枚举描述
          */
         //function GetGridEnumDescription(cellvalue, enumName) {
@@ -408,6 +416,26 @@
         //    })
         //}
 
+        /**
+         * 获取枚举项
+         */
+        //function GetEnumDescriptionList(enumName) {
+        //    $.get({
+        //        url: "/System/GetEnumDescriptionList",
+        //        data: { "enumName": enumName },
+        //        success: function(res) {
+        //            if (res.code == @HttpStatusCode.OK.GetHashCode()) {
+        //                return res.data;
+        //            }
+        //        }
+        //    })
+        //}
+
+        /**
+         * 获取枚举描述
+         * cellvalue：单元格值
+         * enumName：枚举名称，类名.枚举名（例：ResponedStatus.ResultEnum）
+         */
         const GetGridEnumDescription = async (cellvalue, enumName) => {
             var enumList = await GetEnumDescriptionList(enumName);
             console.log({ "enumList": enumList });
@@ -422,6 +450,10 @@
             })
         }
 
+        /**
+         * 获取枚举项
+         * enumName：枚举名称，类名.枚举名（例：ResponedStatus.ResultEnum）
+         */
         const GetEnumDescriptionList = async (enumName) => {
             return new Promise((resolve, reject) => {
                 $.get({
@@ -437,21 +469,6 @@
                 })
             })
         }
-
-        /**
-         * 获取枚举项
-         */
-        //function GetEnumDescriptionList(enumName) {
-        //    $.get({
-        //        url: "/System/GetEnumDescriptionList",
-        //        data: { "enumName": enumName },
-        //        success: function(res) {
-        //            if (res.code == @HttpStatusCode.OK.GetHashCode()) {
-        //                return res.data;
-        //            }
-        //        }
-        //    })
-        //}
 
         /**
          * 提示类型

@@ -32,16 +32,16 @@
                     {
                         field: 'subscribe_time', title: '关注时间',
                         formatter: function(cellvalue) {
-                            return '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")';
+                            return TimestampToTime(cellvalue);
                         }
                     },
-                    { field: 'unionid', title: 'unionid' },
-                    { field: 'remark', title: '备注' },
-                    { field: 'groupid', title: '用户分组' },
+                    //{ field: 'unionid', title: 'unionid' },
+                    //{ field: 'remark', title: '备注' },
+                    //{ field: 'groupid', title: '用户分组' },
                     { field: 'tagid_list', title: '用户标签' },
-                    { field: 'subscribe_scene', title: '关注渠道来源' },
-                    { field: 'qr_scene', title: '二维码扫码场景' },
-                    { field: 'qr_scene_str', title: '二维码扫码场景描述' },
+                    //{ field: 'subscribe_scene', title: '关注渠道来源' },
+                    //{ field: 'qr_scene', title: '二维码扫码场景' },
+                    //{ field: 'qr_scene_str', title: '二维码扫码场景描述' },
                     { field: 'operate', title: '操作', align: 'center', valign: 'middle', formatter: operateFormatter }
                 ],
             search: true,//搜索框

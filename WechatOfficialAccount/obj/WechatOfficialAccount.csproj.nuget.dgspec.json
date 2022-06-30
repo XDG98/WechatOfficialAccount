@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[13.0.1, )"
             },
+            "SqlSugarCore": {
+              "target": "Package",
+              "version": "[5.0.9.1, )"
+            },
             "System.Xml.XmlDocument": {
               "target": "Package",
               "version": "[4.3.0, )"

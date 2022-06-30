@@ -21,5 +21,15 @@
         /// 每页条数
         /// </summary>
         public int limit { get; set; } = 10;
+        /// <summary>
+        /// 每页条数(页码从1开始)
+        /// </summary>
+        public int pageNumber
+        {
+            get
+            {
+                return (offset / limit) + 1;
+            }
+        }
     }
 }

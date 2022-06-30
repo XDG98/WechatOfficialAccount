@@ -10,7 +10,7 @@
             List<GetIpAddressDto> getIpAddressDtoList = ViewData["GetIpAddressDtoList"] as List<GetIpAddressDto>;
             foreach (var item in getIpAddressDtoList)
             {
-                var url = $"https://map.baidu.com/@12697919.69,2560977.31,12z";
+                var url = $"https://uri.amap.com/marker?position={@item.lon},{@item.lat}";
 
                 <div class="col-3 mt-3 mb-3">
                     <div class="card" style="width: 18rem;">

@@ -27,27 +27,28 @@ namespace WechatOfficialAccount.Services
             navBarDtoDic.Add("菜单设置", new List<GetNavBarListDto>() {
                 new GetNavBarListDto() { Name = "自定义菜单列表", Icon = "", AspController = "SelfMenu", AspAction = "Index" },
                 new GetNavBarListDto() { Name = "接口管理", Icon = "", AspController = "SelfMenu", AspAction = "CreateMenu", IsEnable = false },
-                new GetNavBarListDto() { Name = "事件推送" },
-                new GetNavBarListDto() { Name = "个性化菜单" }
+                new GetNavBarListDto() { Name = "事件推送", Icon = "", AspController = "", AspAction = "" },
+                new GetNavBarListDto() { Name = "个性化菜单", Icon = "", AspController = "", AspAction = "" },
             });
             navBarDtoDic.Add("消息设置", new List<GetNavBarListDto>() {
-                new GetNavBarListDto() { Name = "消息推送" },
-                new GetNavBarListDto() { Name = "被动回复消息" },
-                new GetNavBarListDto() { Name = "消息模板" },
-                new GetNavBarListDto() { Name = "订阅消息" }
+                new GetNavBarListDto() { Name = "消息推送", Icon = "", AspController = "", AspAction = "" },
+                new GetNavBarListDto() { Name = "被动回复消息", Icon = "", AspController = "", AspAction = "" },
+                new GetNavBarListDto() { Name = "消息模板", Icon = "", AspController = "", AspAction = "" },
+                new GetNavBarListDto() { Name = "订阅消息", Icon = "", AspController = "", AspAction = "" },
             });
             navBarDtoDic.Add("客服设置", new List<GetNavBarListDto>() {
-                new GetNavBarListDto() { Name = "客服设置" }
+                new GetNavBarListDto() { Name = "客服设置", Icon = "", AspController = "", AspAction = "" },
             });
             navBarDtoDic.Add("用户管理", new List<GetNavBarListDto>()
             {
-                new GetNavBarListDto() { Name = "获取公众号已创建的标签列表", Icon = "", AspController = "User", AspAction = "UserTagPage" },
+                new GetNavBarListDto() { Name = "获取公众号已创建的标签列表", Icon = "", AspController = "UserTag", AspAction = "UserTagPage" },
                 new GetNavBarListDto() { Name = "获取用户列表", Icon = "", AspController = "User", AspAction = "UserPage" },
                 new GetNavBarListDto() { Name = "设置用户备注名", Icon = "", AspController = "User", AspAction = "UpdateRemark" },
             });
-            navBarDtoDic.Add("系统设置", new List<GetNavBarListDto>()
+            navBarDtoDic.Add("系统管理", new List<GetNavBarListDto>()
             {
                 new GetNavBarListDto() { Name = "系统设置", Icon = "", AspController = "System", AspAction = "Index" },
+                new GetNavBarListDto() { Name = "同步微信公众号数据", Icon = "", AspController = "System", AspAction = "SynchronousData" }
             });
 
             return new Success(navBarDtoDic);

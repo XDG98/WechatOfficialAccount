@@ -37,7 +37,7 @@ namespace WechatOfficialAccount.Services
                                 {
                                     type = "view",
                                     name = "跳转网页",
-                                    url = AppSettingsHelper.GetAppSettings("ImgUrl"),
+                                    url = AppSettingsHelper.GetSystemConfig("ImgUrl"),
                                 },
                                 new Sub_buttonItem()
                                 {
