@@ -41,8 +41,10 @@ namespace WechatOfficialAccount.Services
                         weiXin_Tag.count = item.count;
                         weiXin_TagList.Add(weiXin_Tag);
                     }
-                    int num = await sqlSugarScope.Insertable(weiXin_TagList).ExecuteCommandAsync();
-                    resultList.Add(new Success($"用户标签同步{num}条数据！"));
+                    StorageableResult<WeiXin_Tag> x = await sqlSugarScope.Storageable(weiXin_TagList).ToStorageAsync();
+                    int insertNum = await x.AsInsertable.ExecuteCommandAsync();
+                    int updateNum = await x.AsUpdateable.ExecuteCommandAsync();
+                    resultList.Add(new Success($"同步用户标签结果：插入{insertNum}条数据，更新{updateNum}条数据！"));
                 }
                 #endregion
 
@@ -56,22 +58,32 @@ namespace WechatOfficialAccount.Services
                     {
                         WeiXin_User weiXin_User = new WeiXin_User();
                         weiXin_User.openid = item.openid;
+                        weiXin_User.subscribe = item.subscribe;
+                        weiXin_User.nickname = item.nickname;
                         weiXin_User.sex = item.sex;
                         weiXin_User.language = item.language;
                         weiXin_User.country = item.country;
                         weiXin_User.province = item.province;
                         weiXin_User.city = item.city;
+                        weiXin_User.headimgurl = item.headimgurl;
                         weiXin_User.subscribe_time = item.subscribe_time;
+                        weiXin_User.unionid = item.unionid;
+                        weiXin_User.remark = item.remark;
                         weiXin_User.groupid = item.groupid;
                         weiXin_User.tagid_list = string.Join(",", item.tagid_list);
+                        weiXin_User.subscribe_scene = item.subscribe_scene;
+                        weiXin_User.qr_scene = item.qr_scene;
+                        weiXin_User.qr_scene_str = item.qr_scene_str;
                         weiXin_UserList.Add(weiXin_User);
                     }
-                    int num = await sqlSugarScope.Insertable(weiXin_UserList).ExecuteCommandAsync();
-                    resultList.Add(new Success($"用户同步{num}条数据！"));
+                    StorageableResult<WeiXin_User> x = await sqlSugarScope.Storageable(weiXin_UserList).ToStorageAsync();
+                    int insertNum = await x.AsInsertable.ExecuteCommandAsync();
+                    int updateNum = await x.AsUpdateable.ExecuteCommandAsync();
+                    resultList.Add(new Success($"同步用户结果：插入{insertNum}条数据，更新{updateNum}条数据！"));
                 }
                 #endregion
 
-                return new Success(result);
+                return new Success(resultList);
             }
             catch (Exception ex)
             {

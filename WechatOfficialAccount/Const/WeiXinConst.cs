@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Xml;
-using WechatOfficialAccount.Models;
 
 namespace WechatOfficialAccount.Const
 {
@@ -9,88 +7,63 @@ namespace WechatOfficialAccount.Const
         /// <summary>
         /// 公众号搜索
         /// </summary>
-        [Description("ADD_SCENE_SEARCH")]
-        public const string ADD_SCENE_SEARCH = "公众号搜索";
+        [Description("公众号搜索")]
+        public const string ADD_SCENE_SEARCH = "ADD_SCENE_SEARCH";
         /// <summary>
         /// 公众号迁移
         /// </summary>
-        [Description("ADD_SCENE_ACCOUNT_MIGRATION")]
-        public const string ADD_SCENE_ACCOUNT_MIGRATION = "公众号迁移";
+        [Description("公众号迁移")]
+        public const string ADD_SCENE_ACCOUNT_MIGRATION = "ADD_SCENE_ACCOUNT_MIGRATION";
         /// <summary>
         /// 名片分享
         /// </summary>
-        [Description("ADD_SCENE_PROFILE_CARD")]
-        public const string ADD_SCENE_PROFILE_CARD = "名片分享";
+        [Description("名片分享")]
+        public const string ADD_SCENE_PROFILE_CARD = "ADD_SCENE_PROFILE_CARD";
         /// <summary>
         /// 扫描二维码
         /// </summary>
-        [Description("ADD_SCENE_QR_CODE")]
-        public const string ADD_SCENE_QR_CODE = "扫描二维码";
+        [Description("扫描二维码")]
+        public const string ADD_SCENE_QR_CODE = "ADD_SCENE_QR_CODE";
         /// <summary>
         /// 图文页内名称点击
         /// </summary>
-        [Description("ADD_SCENE_PROFILE_LINK")]
-        public const string ADD_SCENE_PROFILE_LINK = "图文页内名称点击";
+        [Description("图文页内名称点击")]
+        public const string ADD_SCENE_PROFILE_LINK = "ADD_SCENE_PROFILE_LINK";
         /// <summary>
         /// 图文页右上角菜单
         /// </summary>
-        [Description("ADD_SCENE_PROFILE_ITEM")]
-        public const string ADD_SCENE_PROFILE_ITEM = "图文页右上角菜单";
+        [Description("图文页右上角菜单")]
+        public const string ADD_SCENE_PROFILE_ITEM = "ADD_SCENE_PROFILE_ITEM";
         /// <summary>
         /// 支付后关注
         /// </summary>
-        [Description("ADD_SCENE_PAID")]
-        public const string ADD_SCENE_PAID = "支付后关注";
+        [Description("支付后关注")]
+        public const string ADD_SCENE_PAID = "ADD_SCENE_PAID";
         /// <summary>
         /// 微信广告
         /// </summary>
-        [Description("ADD_SCENE_WECHAT_ADVERTISEMENT")]
-        public const string ADD_SCENE_WECHAT_ADVERTISEMENT = "微信广告";
+        [Description("微信广告")]
+        public const string ADD_SCENE_WECHAT_ADVERTISEMENT = "ADD_SCENE_WECHAT_ADVERTISEMENT";
         /// <summary>
         /// 他人转载
         /// </summary>
-        [Description("ADD_SCENE_REPRINT")]
-        public const string ADD_SCENE_REPRINT = "他人转载";
+        [Description("他人转载")]
+        public const string ADD_SCENE_REPRINT = "ADD_SCENE_REPRINT";
         /// <summary>
         /// 视频号直播
         /// </summary>
-        [Description("ADD_SCENE_LIVESTREAM")]
-        public const string ADD_SCENE_LIVESTREAM = "视频号直播";
+        [Description("视频号直播")]
+        public const string ADD_SCENE_LIVESTREAM = "ADD_SCENE_LIVESTREAM";
         /// <summary>
         /// 视频号
         /// </summary>
-        [Description("ADD_SCENE_CHANNELS")]
-        public const string ADD_SCENE_CHANNELS = "视频号";
+        [Description("视频号")]
+        public const string ADD_SCENE_CHANNELS = "ADD_SCENE_CHANNELS";
         /// <summary>
         /// 其他
         /// </summary>
-        [Description("ADD_SCENE_OTHERS")]
-        public const string ADD_SCENE_OTHERS = "其他";
+        [Description("其他")]
+        public const string ADD_SCENE_OTHERS = "ADD_SCENE_OTHERS";
 
-        public static Dictionary<int, WeiXinResult> weiXinErrCodeDic = new Dictionary<int, WeiXinResult>();
-        public static void GetWeiXinErrCodeDic()
-        {
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load(Path.Combine(AppContext.BaseDirectory, "wwwroot\\File\\WeiXinErrCode.xml"));
-            //获取xml根节点
-            XmlNode xmlRoot = xmlDocument.DocumentElement;
-            //读取第一个Row节点
-            XmlNodeList xmlNodeList = xmlRoot.SelectNodes("Row");
-            foreach (var xmlNode in xmlNodeList)
-            {
-                XmlElement xmlElement = (XmlElement)xmlNode;
-                XmlNode errCode = xmlElement.SelectSingleNode("ErrCode");
-                XmlNode englishDescription = xmlElement.SelectSingleNode("EnglishDescription");
-                XmlNode chineseDescription = xmlElement.SelectSingleNode("ChineseDescription");
-                if (!string.IsNullOrEmpty(chineseDescription.InnerText))
-                {
-                    weiXinErrCodeDic.Add(int.Parse(errCode.InnerText), new WeiXinResult { errcode = int.Parse(errCode.InnerText), errmsg = chineseDescription.InnerText });
-                }
-                else
-                {
-                    weiXinErrCodeDic.Add(int.Parse(errCode.InnerText), new WeiXinResult { errcode = int.Parse(errCode.InnerText), errmsg = englishDescription.InnerText });
-                }
-            }
-        }
     }
 }

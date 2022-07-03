@@ -38,7 +38,7 @@ namespace WechatOfficialAccount.Helper
                 WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(jsonResult.ToString());
                 if (weiXinResult.errcode != 0)
                 {
-                    result = new Fail(WeiXinResult.GetMessage(weiXinResult), weiXinResult);
+                    result = new Fail(WeiXinResultHandle.GetMessage(weiXinResult), weiXinResult);
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace WechatOfficialAccount.Helper
                 WeiXinResult weiXinResult = JsonConvert.DeserializeObject<WeiXinResult>(jsonResult.ToString());
                 if (weiXinResult.errcode != 0)
                 {
-                    result = new Fail(WeiXinResult.GetMessage(weiXinResult), weiXinResult);
+                    result = new Fail(WeiXinResultHandle.GetMessage(weiXinResult), weiXinResult);
                 }
                 else
                 {

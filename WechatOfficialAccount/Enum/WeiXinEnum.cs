@@ -4,7 +4,7 @@ namespace WechatOfficialAccount.Enum
 {
     public class WeiXinEnum
     {
-        enum Sex
+        public enum Sex
         {
             /// <summary>
             /// 男
@@ -18,7 +18,7 @@ namespace WechatOfficialAccount.Enum
             Female = 1,
         }
 
-        enum test
+        public enum ResultEnum
         {
             /// <summary>
             /// 1

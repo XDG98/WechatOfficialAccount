@@ -21,7 +21,9 @@
                     {
                         field: 'sex', title: '性别',
                         formatter: function(cellvalue) {
-                            return GetGridEnumDescription(cellvalue, "WeiXinEnum.Sex");
+                            var value = GetEnumDescription(cellvalue, "WeiXinEnum.Sex");
+                            console.log(value);
+                            return value;
                         }
                     },
                     { field: 'language', title: '用户语言' },
@@ -39,7 +41,12 @@
                     //{ field: 'remark', title: '备注' },
                     //{ field: 'groupid', title: '用户分组' },
                     { field: 'tagid_list', title: '用户标签' },
-                    //{ field: 'subscribe_scene', title: '关注渠道来源' },
+                    {
+                        field: 'subscribe_scene', title: '关注渠道来源',
+                        formatter: function(cellvalue) {
+                            return GetConstDescription(cellvalue, "WeiXinConst");
+                        }
+                    },
                     //{ field: 'qr_scene', title: '二维码扫码场景' },
                     //{ field: 'qr_scene_str', title: '二维码扫码场景描述' },
                     { field: 'operate', title: '操作', align: 'center', valign: 'middle', formatter: operateFormatter }

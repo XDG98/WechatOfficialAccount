@@ -48,7 +48,7 @@
         /// <summary>
         /// 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
         /// </summary>
-        public int unionid { get; set; }
+        public string unionid { get; set; }
         /// <summary>
         /// 公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注
         /// </summary>

@@ -1,20 +1,20 @@
 ﻿namespace WechatOfficialAccount.Models
 {
     /// <summary>
-    /// 枚举Dto
+    /// 常量Dto
     /// </summary>
-    public class EnumDto
+    public class ConstDto
     {
         /// <summary>
-        /// 枚举名称
+        /// 常量名称
         /// </summary>
         public string Key { get; set; }
         /// <summary>
-        /// 枚举值
+        /// 常量值
         /// </summary>
-        public object Value { get; set; }
+        public string Value { get; set; }
         /// <summary>
-        /// 枚举描述
+        /// 常量描述
         /// </summary>
         public string Description { get; set; }
     }

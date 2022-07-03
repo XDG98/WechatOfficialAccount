@@ -5,6 +5,7 @@ using WechatOfficialAccount.Models.Entity;
 using WechatOfficialAccount.Services;
 using WechatOfficialAccount.Services.Interface;
 using static WechatOfficialAccount.Models.Result;
+using WechatOfficialAccount.Enum;
 
 namespace WechatOfficialAccount.Controllers
 {
@@ -61,11 +62,23 @@ namespace WechatOfficialAccount.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("/System/GetEnumDescriptionList")]
-        public async Task<Result> GetEnumDescriptionList(string enumName)
+        public Result GetEnumDescriptionList(string enumName)
         {
             List<EnumDto> enumDtoList = EnumHelper.GetEnumDescriptionList(enumName);
             return new Success(enumDtoList);
         }
 
+        /// <summary>
+        /// 获取枚举项
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("/System/GetConstDescriptionList")]
+        public Result GetConstDescriptionList(string className)
+        {
+            List<EnumDto> enumDtoList = EnumHelper.GetConstDescriptionList(className);
+            return new Success(enumDtoList);
+        }
+        
     }
 }

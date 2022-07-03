@@ -91,46 +91,33 @@
         </nav>
     </header>
 
-    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            @*模态窗提示框占位*@
-            <div id="MyModalAlert" role="alert" style="display: none;">
-                <i></i>&nbsp;
-                <label></label>
-                <button type="button" class="btn-close" onclick="$('#MyModalAlert').hide();" aria-label="Close"></button>
-            </div>
-            <div class="modal-content">
-                <a hidden id="url"></a>
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="appid" class="form-label">标签Id：</label>
-                            <input type="number" class="form-control" id="id" name="id" autocomplete="off" readonly />
-                        </div>
-                        <div class="mb-3">
-                            <label for="appsecret" class="form-label">标签名称：</label>
-                            <input type="text" class="form-control" id="name" name="name" autocomplete="off" required />
-                            <div class="invalid-feedback">
-                                请输入标签名称
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appsecret" class="form-label">此标签下粉丝数：</label>
-                            <input type="number" class="form-control" id="count" name="count" autocomplete="off" readonly />
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="submit" class="btn btn-primary" onclick="Save()">保存</button>
-                </div>
-            </div>
-        </div>
+    @*模态窗组件*@
+    @*@Html.PartialAsync("UserForm.cshtml")*@
+    @Html.Partial("_FormModal.cshtml")
+
+    @*<div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <div id="MyModalAlert" role="alert" style="display: none;">
+    <i></i>&nbsp;
+    <label></label>
+    <button type="button" class="btn-close" onclick="$('#MyModalAlert').hide();" aria-label="Close"></button>
     </div>
+    <div class="modal-content">
+    <a hidden id="url"></a>
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+    @Html.Partial("_FormModal.cshtml")
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+    <button type="submit" class="btn btn-primary" onclick="Save()">保存</button>
+    </div>
+    </div>
+    </div>
+    </div>*@
 
     <div class="container">
         @*@*提示框占位*@
@@ -159,6 +146,7 @@
             </div>
         </div>
 
+        <button type="button" class="btn btn-primary" onclick="@Html.PartialAsync("_FormModal.cshtml")">加载组件</button>
         <button type="button" class="btn btn-primary" onclick="Toast()">推送通知</button>
         <button type="button" class="btn btn-info" onclick="AlertSuccess(AlertChoose.DefaultAlert, '成功提示！')">成功提示</button>
         <button type="button" class="btn btn-warning" onclick="AlertFail(AlertChoose.DefaultAlert, '失败提示！')">失败提示</button>
@@ -394,64 +382,64 @@
             var m = date.getMinutes() + ':';
             var s = date.getSeconds() + '.';
             var ms = date.getMilliseconds();
-            return Y + M + D + h + m + s + ms;
+            var time = Y + M + D + h + m + s + ms;
+            return time;
         }
 
         /**
-         * 获取枚举描述
+         * 获取常量描述（异步）
+         * cellvalue：单元格值
+         * className：常量类名称
          */
-        //function GetGridEnumDescription(cellvalue, enumName) {
-        //    var enumList;
-        //    async() = {
-        //        enumList = await GetEnumDescriptionList(enumName);
-        //    }
-        //    //var enumList = await GetEnumDescriptionList(enumName);
-        //    if (!enumList) {
-        //        return cellvalue;
-        //    }
-        //    enumList.forEach(function(element) {
-        //        if (cellvalue == element.value) {
-        //            return element.description;
-        //        }
-        //    })
-        //}
+        const GetConstDescription = async (cellvalue, className) => {
+            var constList = await GetConstDescriptionList(className);
+            if (!constList) {
+                return cellvalue;
+            }
+            constList.forEach(function(element) {
+                if (cellvalue == element.value) {
+                    return element.description;
+                }
+            })
+        }
+        /**
+         * 获取枚举项（异步）
+         * className：常量类名称
+         */
+        const GetConstDescriptionList = async (className) => {
+            return new Promise((resolve, reject) => {
+                $.get({
+                    url: "/System/GetConstDescriptionList",
+                    data: { "className": className },
+                    success: function(res) {
+                        if (res.code == @HttpStatusCode.OK.GetHashCode()) {
+                            resolve(res.data);
+                        } else {
+                            reject(res);
+                        }
+                    }
+                })
+            })
+        }
 
         /**
-         * 获取枚举项
-         */
-        //function GetEnumDescriptionList(enumName) {
-        //    $.get({
-        //        url: "/System/GetEnumDescriptionList",
-        //        data: { "enumName": enumName },
-        //        success: function(res) {
-        //            if (res.code == @HttpStatusCode.OK.GetHashCode()) {
-        //                return res.data;
-        //            }
-        //        }
-        //    })
-        //}
-
-        /**
-         * 获取枚举描述
+         * 获取枚举描述（异步）
          * cellvalue：单元格值
          * enumName：枚举名称，类名.枚举名（例：ResponedStatus.ResultEnum）
          */
-        const GetGridEnumDescription = async (cellvalue, enumName) => {
+        const GetEnumDescription = async (cellvalue, enumName) => {
             var enumList = await GetEnumDescriptionList(enumName);
-            console.log({ "enumList": enumList });
             if (!enumList) {
                 return cellvalue;
             }
             enumList.forEach(function(element) {
                 if (cellvalue == element.value) {
-                    console.log({ "element.description": element.description });
-                    return "'" + element.description + "'";
+                    return element.description;
                 }
             })
         }
-
         /**
-         * 获取枚举项
+         * 获取枚举项（异步）
          * enumName：枚举名称，类名.枚举名（例：ResponedStatus.ResultEnum）
          */
         const GetEnumDescriptionList = async (enumName) => {

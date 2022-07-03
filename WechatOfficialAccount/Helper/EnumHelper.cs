@@ -21,7 +21,7 @@ namespace WechatOfficialAccount.Helper
             {
                 //获取描述特性
                 DescriptionAttribute[] attrs = memberInfos[0].GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
-                if (attrs!=null && attrs.Length > 0)
+                if (attrs != null && attrs.Length > 0)
                 {
                     //返回当前描述
                     return attrs[0].Description;
@@ -30,6 +30,7 @@ namespace WechatOfficialAccount.Helper
             return en.ToString();
         }
 
+        #region 枚举
         /// <summary>
         /// 获取枚举项
         /// </summary>
@@ -38,9 +39,8 @@ namespace WechatOfficialAccount.Helper
         public static List<EnumDto> GetEnumDescriptionList(string enumName)
         {
             var ems = GetEnums(enumName);
-            Type value = null;
             string name = enumName.Substring(enumName.LastIndexOf(".") + 1);
-            var inst = ems.TryGetValue(name, out value);
+            var inst = ems.TryGetValue(name, out Type value);
             var listDic = inst ? EnumToList(value) : new List<EnumDto>();
             return listDic;
         }
@@ -114,5 +114,71 @@ namespace WechatOfficialAccount.Helper
             }
             return enumDtoList;
         }
+        #endregion
+
+        #region Const
+        /// <summary>
+        /// 获取常量项
+        /// </summary>
+        /// <param name="className"></param>
+        /// <returns></returns>
+        public static List<EnumDto> GetConstDescriptionList(string className)
+        {
+            var ems = GetConst(className);
+            var inst = ems.TryGetValue(className, out Type value);
+            var enumDtoLlist = inst ? ConstToList(value) : new List<EnumDto>();
+            return enumDtoLlist;
+        }
+
+        /// <summary>
+        /// 获取所有常量
+        /// </summary>
+        /// <param name="className"></param>
+        /// <returns></returns>
+        public static Dictionary<string, Type> GetConst(string className)
+        {
+            Dictionary<string, Type> m_enums = new Dictionary<string, Type>();
+            if (m_enums.Count > 0)
+                return m_enums;
+
+            var ass = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var item in ass)
+            {
+                if (!item.FullName.StartsWith("WechatOfficialAccount"))
+                    continue;
+
+                var types = item.GetTypes().ToList();
+                var ems = types.FindAll(x => x.Name == className);
+                if (null != ems && ems.Count > 0)
+                {
+                    foreach (var em in ems)
+                    {
+                        m_enums[em.Name] = em;
+                    }
+                }
+            }
+            return m_enums;
+        }
+
+        /// <summary>
+        /// 常量转List
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static List<EnumDto> ConstToList(Type type)
+        {
+            List<EnumDto> enumDtoList = new List<EnumDto>();
+            FieldInfo[] fieldInfos = type.GetFields();
+            foreach (FieldInfo fieldInfo in fieldInfos)
+            {
+                DescriptionAttribute attr = (DescriptionAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(DescriptionAttribute), false);
+                object constValu = fieldInfo.GetRawConstantValue();
+                enumDtoList.Add(new EnumDto() { Key = fieldInfo.Name, Value = constValu, Description = attr?.Description });
+            }
+
+            return enumDtoList;
+        }
+        #endregion
+
     }
 }
