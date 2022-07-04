@@ -21,10 +21,10 @@ namespace WechatOfficialAccount.Models
 
     }
 
-    public class WeiXinResultHandle
+    public static class WeiXinResultHandle
     {
         public static Dictionary<int, WeiXinResult> weiXinErrCodeDic;
-        public WeiXinResultHandle()
+        static WeiXinResultHandle()
         {
             weiXinErrCodeDic = GetWeiXinErrCodeDic();
         }

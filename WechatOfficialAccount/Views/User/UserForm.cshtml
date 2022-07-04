@@ -1,41 +1,48 @@
 ﻿@using System.Net
-@using static WechatOfficialAccount.Models.Entity.Tag
 @{
     ViewData["Title"] = "用户管理-标签设置";
-    TagDetail tag = ViewData["Tag"] as TagDetail;
 }
 
 <div class="container">
 
-    <div class="mb-3">
-        <label for="appid" class="form-label">标签Id：</label>
-        <input type="number" class="form-control" id="id" name="id" value="@tag?.id" autocomplete="off" required readonly />
-    </div>
-    <div class="mb-3">
-        <label for="appsecret" class="form-label">标签名称：</label>
-        <input type="text" class="form-control" id="name" name="name" value="@tag?.name" autocomplete="off" required />
-        <div class="invalid-feedback">
-            请输入标签名称
+    <div class="row row-cols-2 gy-3">
+        <div class="col">
+            <label for="openid" class="form-label">用户唯一标识：</label>
+            <input type="number" class="form-control" id="openid" name="openid" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="sex" class="form-label">性别：</label>
+            <input type="number" class="form-control" id="sex" name="sex" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="language" class="form-label">用户语言：</label>
+            <input type="text" class="form-control" id="language" name="language" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="country" class="form-label">国家：</label>
+            <input type="number" class="form-control" id="country" name="country" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="province" class="form-label">省：</label>
+            <input type="number" class="form-control" id="province" name="province" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="city" class="form-label">城市：</label>
+            <input type="number" class="form-control" id="city" name="city" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="subscribe_time" class="form-label">关注时间：</label>
+            <input type="number" class="form-control" id="subscribe_time" name="subscribe_time" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="tagid_list" class="form-label">用户标签：</label>
+            <input type="number" class="form-control" id="tagid_list" name="tagid_list" autocomplete="off" readonly />
+        </div>
+        <div class="col">
+            <label for="subscribe_scene" class="form-label">关注渠道来源：</label>
+            <input type="number" class="form-control" id="subscribe_scene" name="subscribe_scene" autocomplete="off" readonly />
         </div>
     </div>
-    <div class="mb-3">
-        <label for="appsecret" class="form-label">此标签下粉丝数：</label>
-        <input type="number" class="form-control" id="count" name="count" value="@tag?.count" autocomplete="off" readonly />
-    </div>
-    @{
-        if (string.IsNullOrEmpty(@tag?.id.ToString()))
-        {
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="CreateTag()">新增</button>
-            </div>
-        }
-        else
-        {
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="UpdateTag()">保存</button>
-            </div>
-        }
-    }
 
 </div>
 

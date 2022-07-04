@@ -1,41 +1,25 @@
 ﻿@using System.Net
-@using static WechatOfficialAccount.Models.Entity.Tag
 @{
     ViewData["Title"] = "用户管理-标签设置";
-    TagDetail tag = ViewData["Tag"] as TagDetail;
 }
 
 <div class="container">
 
     <div class="mb-3">
         <label for="appid" class="form-label">标签Id：</label>
-        <input type="number" class="form-control" id="id" name="id" value="@tag?.id" autocomplete="off" required readonly />
+        <input type="number" class="form-control" id="id" name="id" autocomplete="off" required readonly />
     </div>
     <div class="mb-3">
         <label for="appsecret" class="form-label">标签名称：</label>
-        <input type="text" class="form-control" id="name" name="name" value="@tag?.name" autocomplete="off" required />
+        <input type="text" class="form-control" id="name" name="name" autocomplete="off" required />
         <div class="invalid-feedback">
             请输入标签名称
         </div>
     </div>
     <div class="mb-3">
         <label for="appsecret" class="form-label">此标签下粉丝数：</label>
-        <input type="number" class="form-control" id="count" name="count" value="@tag?.count" autocomplete="off" readonly />
+        <input type="number" class="form-control" id="count" name="count" autocomplete="off" readonly />
     </div>
-    @{
-        if (string.IsNullOrEmpty(@tag?.id.ToString()))
-        {
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="CreateTag()">新增</button>
-            </div>
-        }
-        else
-        {
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="UpdateTag()">保存</button>
-            </div>
-        }
-    }
 
 </div>
 

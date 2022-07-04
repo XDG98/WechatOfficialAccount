@@ -46,6 +46,10 @@ namespace WechatOfficialAccount.Services
                     int updateNum = await x.AsUpdateable.ExecuteCommandAsync();
                     resultList.Add(new Success($"同步用户标签结果：插入{insertNum}条数据，更新{updateNum}条数据！"));
                 }
+                else
+                {
+                    resultList.Add(new Fail($"同步用户标签结果：{result.Message}", result.Data));
+                }
                 #endregion
 
                 #region 同步用户
@@ -80,6 +84,10 @@ namespace WechatOfficialAccount.Services
                     int insertNum = await x.AsInsertable.ExecuteCommandAsync();
                     int updateNum = await x.AsUpdateable.ExecuteCommandAsync();
                     resultList.Add(new Success($"同步用户结果：插入{insertNum}条数据，更新{updateNum}条数据！"));
+                }
+                else
+                {
+                    resultList.Add(new Fail($"同步用户结果：{result.Message}", result.Data));
                 }
                 #endregion
 

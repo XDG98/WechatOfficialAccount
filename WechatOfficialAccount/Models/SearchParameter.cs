@@ -10,9 +10,13 @@
         /// </summary>
         public string? search { get; set; }
         /// <summary>
-        /// 排序
+        /// 排序字段
         /// </summary>
         public string? sort { get; set; }
+        /// <summary>
+        /// 排序顺序： desc 降序，asc 升序
+        /// </summary>
+        public string? order { get; set; }
         /// <summary>
         /// 跳过条数
         /// </summary>

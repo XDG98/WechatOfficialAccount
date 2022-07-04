@@ -46,6 +46,7 @@ namespace WechatOfficialAccount.Services
             {
                 queryable.Where(item => item.openid.ToString().Contains(parameter.search) || item.city.Contains(parameter.search));
             }
+            Sort(queryable, parameter);
             searchDto.total = queryable.Count();
             searchDto.rows = await queryable.ToPageListAsync(parameter.pageNumber, parameter.limit);
 
@@ -74,6 +75,14 @@ namespace WechatOfficialAccount.Services
         public async Task<int> Delete(int id)
         {
             return await sqlSugarScope.Deleteable<WeiXin_User>(id).ExecuteCommandAsync();
+        }
+
+        public void Sort<T>(ISugarQueryable<T> queryable, SearchParameter parameter) where T : new()
+        {
+            if ((!string.IsNullOrEmpty(parameter.sort) && parameter.sort != "sequence") && !string.IsNullOrEmpty(parameter.order))
+            {
+                queryable.OrderBy($" {parameter.sort} {parameter.order} ");
+            }
         }
 
     }

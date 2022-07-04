@@ -91,35 +91,39 @@
         </nav>
     </header>
 
-    @*模态窗组件*@
-    @*@Html.PartialAsync("UserForm.cshtml")*@
-    @Html.Partial("_FormModal.cshtml")
+    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="MyModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div id="MyModalAlert" role="alert" style="display: none;">
+                <i></i>&nbsp;
+                <label></label>
+                <button type="button" class="btn-close" onclick="$('#MyModalAlert').hide();" aria-label="Close"></button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="MyModalTitle">模态窗标题</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="MyModalForm">
+                        @if (ViewData["MyModalPartialForm"] != null && !string.IsNullOrEmpty(ViewData["MyModalPartialForm"].ToString()))
+                        {
+                            @Html.Partial(ViewData["MyModalPartialForm"].ToString())
+                        }
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <a hidden id="MyModalSaveUrl"></a>
+                    <button type="button" id="MyModalSaveButton" class="btn btn-primary" onclick="Save()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    @*<div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-    <div id="MyModalAlert" role="alert" style="display: none;">
-    <i></i>&nbsp;
-    <label></label>
-    <button type="button" class="btn-close" onclick="$('#MyModalAlert').hide();" aria-label="Close"></button>
-    </div>
-    <div class="modal-content">
-    <a hidden id="url"></a>
-    <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">模态窗标题</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-    @Html.Partial("_FormModal.cshtml")
-    </div>
-    <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-    <button type="submit" class="btn btn-primary" onclick="Save()">保存</button>
-    </div>
-    </div>
-    </div>
-    </div>*@
+    <div class="container mt-1">
+        <div id="liveAlertPlaceholder"></div>
+        <button type="button" class="btn btn-primary" onclick="Alert('hdygn和德国法国吃饭','danger')">显示警告框（alert）</button>
 
-    <div class="container">
         @*@*提示框占位*@
         <div id="MyDefaultAlertAlert" role="alert" style="display: none;">
             <i></i>&nbsp;
@@ -184,6 +188,26 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>
     <script>
+
+        var alertPlaceholder = $("#liveAlertPlaceholder");
+        function Alert(message, type) {
+            var wrapper = document.createElement('div');
+            var timestamp = Date.now();
+            console.log(timestamp);
+            wrapper.innerHTML = '<div id="' + timestamp + '" class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                '<i class="bi bi-info-circle-fill"></i>&nbsp;&nbsp;' + message +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                '</div>';
+            alertPlaceholder.append(wrapper);
+
+            setTimeout(function() {
+                $("#" + timestamp).alert("close");
+            }, @AppSettingsHelper.GetSystemConfig("AlertTime"));
+        }
+
+        /**
+         * 和风天气组件
+         */
         WIDGET = {
             "CONFIG": {
                 "modules": "01234",
@@ -207,50 +231,74 @@
             }
         }
 
-        var myModal = $('#MyModal')[0];
-        myModal.addEventListener('show.bs.modal', function(event) {
+        //dataTable方法
+        //#region dataTable方法
+        // 方法1： 刷新（重新加载数据）
+        function DATaTableReLoad1() {
+            $('#DataTable').bootstrapTable('destroy');
+        }
+        // 方法2： 刷新（重新加载数据）
+        function DATaTableReLoad2() {
+            $("#DataTable").bootstrapTable('refreshOptions', { pageNumber: 1 });  // pageNumber:1, 指定页码为第1页
+            $("#DataTable").bootstrapTable('refresh');
+        }
+        // 方法3（推荐）： 跳转到第1页（包含查询和重新加载）
+        function DATaTableReLoadPage() {
+            $("#DataTable").bootstrapTable('selectPage', 1);
+        }
+        //#endregion
+        
+        //模态窗
+        //#region 模态窗
+        /**
+         * 模态窗
+         */
+        var myModal = $("#MyModal");
+        myModal.on('show.bs.modal', function(event) {
             var button = event.relatedTarget;
-            // Extract info from data-bs-* attributes
-            var url = button.getAttribute('data-bs-url');
-            var id = button.getAttribute('data-bs-id');
-            var name = button.getAttribute('data-bs-name');
-            var count = button.getAttribute('data-bs-count');
-            // If necessary, you could initiate an AJAX request here
-            // and then do the updating in a callback.
-            //
-            // Update the modal's content.
-            var modalContentUrl = $('.modal-content a[id="url"]')[0];
-            var modalBodyForm = $('.modal-body form')[0];
-            var modalTitle = $('.modal-title')[0];
-            var modalBodyId = $('.modal-body input[id="id"]')[0];
-            var modalBodyName = $('.modal-body input[id="name"]')[0];
-            var modalBodyCount = $('.modal-body input[id="count"]')[0];
 
-            modalContentUrl.value = url;
-            modalTitle.textContent = '编辑';
-            modalBodyId.value = id;
-            modalBodyName.value = name;
-            modalBodyCount.value = count;
+            //标题
+            $('#MyModalTitle').html(button.getAttribute('data-bs-MyModalTitle'));
+            //保存按钮Url
+            var myModalSaveUrl = button.getAttribute('data-bs-MyModalSaveUrl');
+            $('#MyModalSaveUrl').val(myModalSaveUrl);
+            if (!myModalSaveUrl) {
+                //不是编辑隐藏保存按钮
+                $("#MyModalSaveButton").hide();
+            }
+
+            var modalForm = $("#MyModalForm").serializeArray();
+            modalForm.forEach(function(element) {
+                //获取
+                $('#' + element.name).val(button.getAttribute('data-bs-' + element.name));
+            })
         })
-
         /**
          * 模态窗保存
          */
         function Save() {
-            var url = $("#url").val();
-            var id = $("#id").val();
-            var name = $("#name").val();
-            var parameter = { "id": id, "name": name };
+            var myModalSaveUrl = $("#MyModalSaveUrl").val();
+            var parameter = {};
+            var myModalForm = $("#MyModalForm").serializeArray();
+            myModalForm.forEach(function(element) {
+                parameter[element.name] = element.value;
+            })
+            console.log(parameter);
             $.post({
-                url: url,
+                url: myModalSaveUrl,
                 contentType: "application/json;charset=UTF-8",
                 data: JSON.stringify(parameter),
                 success: function(res) {
-                    ModalAlert(res);
+                    //隐藏窗口
+                    $('#MyModal').modal('hide');
+                    DATaTableReLoadPage();
+                    DefaultAlert(res);
                 }
             })
         }
-
+        //#endregion
+        
+        //推送通知
         //#region 推送通知
         var toastTrigger = document.getElementById('liveToastBtn');
         var toastLiveExample = document.getElementById('MyToast');
@@ -289,7 +337,6 @@
                     break;
             }
         }
-
         /**
          * 模态窗提示
          * res：响应结果
@@ -348,13 +395,12 @@
                     myAlert = $('#MyModalAlert');
                     break;
             }
-            myAlert.addClass("alert alert-" + alertType + " alert-dismissible fade show");
 
+            myAlert.addClass("alert alert-" + alertType + " alert-dismissible fade show");
             var myAlertIcon = myAlert.find("i");
             myAlertIcon.addClass("bi bi-" + alertIcon);
             var myAlertContent = myAlert.find("label");
             myAlertContent.html(content);
-
             myAlert.show();
 
             setTimeout(function() {
@@ -362,6 +408,37 @@
                 myAlertIcon.removeClass();
                 myAlertContent.html("");
                 myAlert.hide();
+            }, @AppSettingsHelper.GetSystemConfig("AlertTime"));
+        }
+
+        /**
+         * 自定义提示
+         * type: 1.默认提示，2.模态窗提示
+         * alertType：提示类型
+         * alertIcon：提示图标
+         * content：提示内容
+         */
+        function DefinedAlert(alertChoose, alertType, alertIcon, content) {
+            switch (alertChoose) {
+                case AlertChoose.DefaultAlert:
+                    myAlert = $('#MyDefaultAlertAlert');
+                    break;
+                case AlertChoose.ModalAlert:
+                    myAlert = $('#MyModalAlert');
+                    break;
+            }
+
+            var wrapper = document.createElement('div');
+            var timestamp = Date.now();
+            console.log(timestamp);
+            wrapper.innerHTML = '<div id="' + timestamp + '" class="alert alert-' + alertType + ' alert-dismissible fade show" role="alert">' +
+                '<i class="bi bi-info-circle-fill"></i>&nbsp;&nbsp;' + message +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                '</div>';
+            alertPlaceholder.append(wrapper);
+
+            setTimeout(function() {
+                $("#" + timestamp).alert("close");
             }, @AppSettingsHelper.GetSystemConfig("AlertTime"));
         }
 
@@ -458,6 +535,8 @@
             })
         }
 
+        //枚举，常量
+        //#region 枚举，常量
         /**
          * 提示类型
          */
@@ -489,7 +568,8 @@
              */
             ModalAlert: 2,
         }
-
+        //#endregion
+        
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

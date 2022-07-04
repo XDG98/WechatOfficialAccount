@@ -42,6 +42,7 @@ namespace WechatOfficialAccount.Services
             {
                 queryable.Where(item => item.id.ToString().Contains(parameter.search) || item.name.Contains(parameter.search));
             }
+            Sort(queryable, parameter);
             searchDto.total = queryable.Count();
             List<WeiXin_Tag> weiXin_TagList = await queryable.ToPageListAsync(parameter.pageNumber, parameter.limit);
             searchDto.rows = weiXin_TagList;
@@ -58,5 +59,14 @@ namespace WechatOfficialAccount.Services
         {
             return await sqlSugarScope.Deleteable<WeiXin_Tag>(id).ExecuteCommandAsync();
         }
+
+        public void Sort<T>(ISugarQueryable<T> queryable, SearchParameter parameter) where T : new()
+        {
+            if ((!string.IsNullOrEmpty(parameter.sort) && parameter.sort != "sequence") && !string.IsNullOrEmpty(parameter.order))
+            {
+                queryable.OrderBy($" {parameter.sort} {parameter.order} ");
+            }
+        }
+
     }
 }
